@@ -1,0 +1,19 @@
+<ion-view style="" class=" " id="page10" title="Orders">
+    <ion-content class="has-header" padding="true">
+      <label class="item item-input" style="background-color: aliceblue;">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="text" ng-model="filterOrder.OrderDate" placeholder="Tìm theo ngày đặt hàng" >
+          </label>
+      <ion-list>
+          <ion-item class="item-avatar" ng-repeat="order in orders| filter:filterOrder" ng-click="orderClick(order._id)">
+            <img  style="margin-top: 20px;" src="img/client/orders.png">           
+            <div style="margin-left: -20px;">
+              <p style="font-size: 12px; color: gray; margin-bottom: 0px"><b>Mã: {{order._id}}</b></p>
+              <p style="font-size: 12px; color:gray; margin-bottom: 0px;" >Ngày: {{order.OrderDate | date:"dd/MM/yyyy 'lúc' h:mma"}}</p>
+              <p style="font-size: 12px; color: green; margin-bottom: 0px;">Trạng thái: {{order.Status}}</p>
+              <p style="font-size: 12px; color: green; margin-bottom: 0px"><b>Tổng: {{order.Total| currency:"":0}}đ</b></p> 
+            </div>
+          </ion-item>        
+      </ion-list>
+    </ion-content>
+</ion-view>

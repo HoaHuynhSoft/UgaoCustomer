@@ -1,0 +1,93 @@
+<ion-view style="" class=" " id="page9" title="Giỏ hàng">
+    <ion-content class="has-header" padding="true">
+      <div class="row text-center">
+        <div class = "col">
+            <p style="color: blueviolet; font-size: 16px;">
+          <strong> {{curCart.Items.length}} Sản phẩm</strong>
+        </p>
+        </div>
+        <div class = "col">
+          <p style="color: blueviolet; font-size: 16px;">Tổng:
+          <strong> {{curCart.Total| currency:"":0}}đ</strong>
+        </p>
+        </div>
+      </div>
+      <button ng-click="order()" class="button button-assertive button-block ">Đặt hàng</button>
+      <div class="card">
+        <div class="item item-divider item-icon-right" ng-click = "headerInfoClick()">
+          <i class="icon" ng-class="{'ion-ios-arrow-right':headerInfo,'ion-ios-arrow-down':!headerInfo}"></i>
+          Thông tin đặt hàng
+        </div>
+        <ion-list ng-show="!headerInfo">
+            <ion-item class = "item-remove-animate item-icon-left" >
+                <h2>Tên: {{curUser.FullName}}</h2>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+            </ion-item>
+            <ion-item class = "item-remove-animate item-icon-left" >
+                <h2>Sđt: {{curUser.Phone}}</h2>
+                <i class="icon ion-chevron-right icon-accessory"></i>   
+            </ion-item>
+            <ion-item class = "item-remove-animate item-icon-left" >
+                <h2>Đ/c: {{curUser.Address}}</h2>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+            </ion-item>
+            <ion-item class = "item-remove-animate item-icon-left" >
+                <input style= "width: 100%;" type="text" ng-model="rootNote.Note" placeholder="Điền vào lưu ý khi giao hàng" >
+                <i class="icon ion-chevron-right icon-accessory"></i>
+            </ion-item>
+            <div class="row">
+              <div class="col text-center">
+                <a class="button icon-left ion-ios-color-wand-outline button-clear button-positive" ng-click = "editInfo()">Sửa thông tin</a>
+              </div>
+            </div>
+        </ion-list>
+     </div>
+     <div class="card">
+        <div class="item item-divider item-icon-right" ng-click = "headerCouponClick()">
+          <i class="icon" ng-class="{'ion-ios-arrow-right':headerCoupon,'ion-ios-arrow-down':!headerCoupon}"></i>
+          Bạn có mã giảm giá?
+        </div>
+        <ion-list ng-show="!headerCoupon">
+            <ion-item class = "item-remove-animate item-icon-left" >
+                <input style= "width: 100%;" type="text" ng-model="rootNote.Note" placeholder="Mã giảm giá" >
+                <i class="icon ion-chevron-right icon-accessory"></i>
+            </ion-item>
+             <div class="row">
+              <div class="col text-center">
+                <a class="button icon-left ion-ios-color-wand-outline button-clear button-positive" ng-click = "couponClick()">Xác nhận mã giảm giá</a>
+              </div>
+            </div>
+        </ion-list>
+     </div>
+      
+      
+      <div ng-repeat="item in curCart.Items track by $index"   >
+        <div class="list card" >
+          
+          <div class="item item-body" >
+            <div class= "row">
+										<div class= "col col-50">
+                      <img ng-src="{{'img/'+ item.image+'.jpg'}}" width="70%" height="auto" style="box-shadow: none;">
+										</div>
+										<div class= "col">
+                      <p style="color: gray; font-size: 16px;"><strong> {{item.name}}đ</strong>
+                      </p>
+											<p style="color: gray; font-size: 16px;"><strong> {{item.price| currency:"":0}}đ</strong>
+                      </p>
+										</div>
+						</div>
+            <div>
+              
+            </div>
+            <div class="button-bar" style="box-shadow: none;">
+              <button ng-click="inc(item)" class="button button-balanced button-block button-small icon icon ion-plus" ></button>
+              <button ng-click="removeFromCart(item)" class="button button-dark button-block button-small icon ion-android-delete" ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </ion-content>
+</ion-view>

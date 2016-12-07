@@ -1,0 +1,33 @@
+<ion-view style="" class=" " id="page10" title="Trang nhắc nhở">
+    <ion-content class="has-header" padding="true" style="background-color: #886aea">
+      <div class="row">
+          <div class="reminderContainer">
+                <p>Bạn còn khoảng</p>
+                <div class="row">
+                    <div class="col">
+                        <p class="number" ng-class="estimateLevel">{{monthNo| number:0}}</p><br/><br/>
+                        <p class="numberLabel">Tháng</p>
+                    </div>
+                    <div class="col">
+                        <p class="number" ng-class="estimateLevel">{{dayNo| number:0}}</p><br/><br/>
+                        <p class="numberLabel">Ngày</p>
+                    </div>
+                </div>
+                <p style = "margin:20px;">Là hết gas!</p>
+          
+          </div>
+      </div>
+      <div class="row" >
+        <div class="col text-center">
+            <button class="button button-outline circlebtn" ng-click="order()" >
+                <div ng-class="estimateLevel">Đặt</div>
+            </button>
+        </div>            
+    </div>
+      <div class="row" style= "position: absolute;bottom: 0;left: 0;" >
+          <button class="button button-full button-outline button-light" style="float: right; font-size:10px;" ui-sref="myCart">
+                  Chi tiết hơn >
+          </button>
+      </div>
+    </ion-content>
+</ion-view>

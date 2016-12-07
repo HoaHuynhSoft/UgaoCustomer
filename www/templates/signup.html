@@ -1,0 +1,37 @@
+<ion-view style="" class=" " id="page6" title="Trang đăng kí" hide-nav-bar="true">
+    <ion-content class="has-header" padding="true">
+        <form name="signupForm" class="list " id="signup-form2">
+            <ion-list class=" " id="signup-list3">
+			   <div class="app-icon"></div>
+              <label class="item item-input item-floating-label">
+                <span style="color: #9F9F9F;"  class="input-label">Tên đăng nhập*</span>
+                <input style="color: #dimgray;" ng-model="user.Name" type="text" placeholder="Tên đăng nhập*">
+              </label>
+              <label class="item item-input item-floating-label">
+                  <span style="color: #9F9F9F;" class="input-label">Mật khẩu*</span>
+                  <input style="color: #dimgray;" ng-model="user.Pass" type="password" placeholder="Mật khẩu*">
+              </label>
+              <label class="item item-input item-floating-label">
+                <span style="color: #9F9F9F;" class="input-label">Số điện thoại*</span>
+                <input style="color: #dimgray;" ng-model="user.Phone" type="tel" placeholder="Số điện thoại*">
+              </label>
+              <label class="item item-input item-floating-label">
+                <span style="color: #9F9F9F;"  class="input-label">Tên đầy đủ</span>
+                <input style="color: #dimgray;" ng-model="user.FullName" type="text" placeholder="Tên đầy đủ">
+              </label>
+
+              <label class="item item-input item-floating-label">
+                  <span style="color: #9F9F9F;" class="input-label">Địa chỉ</span>
+                  <input style="color: #dimgray;" ng-model="user.Address" type="text" placeholder="Địa chỉ">
+              </label>
+              <label class="item item-input item-floating-label">
+                  <span style="color: #9F9F9F;" class="input-label">Email</span>
+                  <input style="color: #dimgray;" ng-model="user.Email" type="email" placeholder="Email">
+              </label>
+
+            </ion-list>
+            <div style="width: 279px; height: 35px;" class="spacer"></div>
+            <button ng-click="signupEmail(signupForm,user)" class=" button button-royal  button-block  icon-left ion-ios-paperplane-outline " style="border-radius:0px 0px 0px 0px;" id="signup-button3">Đăng kí & đăng nhập</button>        
+            </form>
+    </ion-content>
+</ion-view>

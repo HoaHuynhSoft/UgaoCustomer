@@ -1,0 +1,27 @@
+<ion-view style="" class=" " id="page5" title="Trang đăng nhập" hide-nav-bar="true">
+    <ion-content class="has-header" padding="true" >
+		<form name="loginForm" class="list " id="login-form1">
+            <ion-list class=" " id="login-list2">
+
+                <div class="app-icon"></div>
+
+                <label class="item item-input item-floating-label">
+                    <span class="input-label" style="color: #9F9F9F;">UserName</span>
+                    <input ng-model="user.UserName" style="color: dimgray;" type="text" placeholder="Username">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label" style="color: #9F9F9F;" >Password</span>
+                    <input ng-model="user.Pass" style="color: dimgray;" type="password" placeholder="Password">
+                </label>
+
+            </ion-list>
+
+            <div style="height: 40px;" class="spacer"></div>
+            <button ng-click="login(user)" class=" button button-royal  button-block  icon-left ion-log-in "  id="signup-button3">Vào</button>
+            <button ng-click="loginFb('facebook')" class=" button button-positive  button-block icon-left ion-social-facebook "  id="signup-button4">Đăng nhập bằng facebook</button>
+        </form>
+
+		<a class=" button button-stable  button-block button-clear icon-left ion-ios-email-outline " id="login-button5" ui-sref="tabsController.forgotPassword">Bạn quên mật khẩu?</a>
+
+	</ion-content>
+</ion-view>
