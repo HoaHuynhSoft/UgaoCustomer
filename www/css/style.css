@@ -6,7 +6,7 @@
     color: gold !important;
 }
 .estimateLevel3{
-    color: red !important;
+    color: gray !important;
 }
 .popup {
     width: 95%;
@@ -469,3 +469,21 @@ margin-top:10px;
   border-radius: 50%;
   -webkit-border-radius: 50%;
 }
+.rowCustom {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: block;
+  padding: 5px;
+  width: 100%; }
+  .normal{
+      background-color:green;
+  }
+  .emergency{
+      background-color:red;
+  }
+  .inUsing{
+    background-color: #886aea;
+  }

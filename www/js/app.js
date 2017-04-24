@@ -29,7 +29,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
 
     FCMPlugin.getToken(
       function(token){
-        alert(token);
+        $rootScope.PushToken = token;
         console.log(' retrieving token: ' + token);
       },
       function(err){

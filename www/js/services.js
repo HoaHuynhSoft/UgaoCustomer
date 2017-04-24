@@ -8,7 +8,7 @@ angular.module('app.services', [])
     },
     'getUser': function(login){  // Hàm lấy user
         var d = $q.defer();
-        $http.get("http://192.168.1.7:3000/api/users/"+login.UserName)
+        $http.get("http://192.168.121.2:3000/api/users/"+login.UserName)
         .success(function(data){
           self.curUser = data;
           d.resolve(data);
@@ -20,7 +20,7 @@ angular.module('app.services', [])
     },
     'addUser': function(user){ // Hàm thêm user
         var d = $q.defer();
-        $http.post("http://192.168.1.7:3000/api/users/",user)
+        $http.post("http://192.168.121.2:3000/api/users/",user)
         .success(function(data){
           self.curUser = data;
           d.resolve("success");
@@ -32,8 +32,7 @@ angular.module('app.services', [])
     },
     'updateUser': function(newUser){ // Hàm cập nhật thông tin user
         var d = $q.defer();
-        console.log(JSON.stringify(newUser));
-        $http.put("http://192.168.1.7:3000/api/users/"+newUser._id,newUser)
+        $http.put("http://192.168.121.2:3000/api/users/"+newUser._id,newUser)
         .success(function(data){
           d.resolve("success");
         })
@@ -50,7 +49,7 @@ angular.module('app.services', [])
     'items' : [], // chứa posts lấy về
     'getItemById': function(itemId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.1.7:3000/api/items/"+itemId)
+        $http.get("http://192.168.121.2:3000/api/items/"+itemId)
         .success(function(data){
           d.resolve(data);
         })
@@ -61,7 +60,7 @@ angular.module('app.services', [])
     },
     'getAllItems': function(){ // Hàm lấy tất cả các bài post hiện tại
         var d = $q.defer();
-        $http.get("http://192.168.1.7:3000/api/items")
+        $http.get("http://192.168.121.2:3000/api/items")
         .success(function(data){
           d.resolve(data);
         })
@@ -76,33 +75,60 @@ angular.module('app.services', [])
 .factory("CartService", function($http,$q){ // Service cho post
   var self = {  // tạo một đối tượng service, chứa các hàm và biến
     'cart' : {}, // chứa posts lấy về
-    'getCurCart': function(){ // Hàm lấy user hiện tại
+    'getCurCart': function(){ 
         return self.cart;
     },
-    'addItemCurCart': function(item){ // Hàm lấy user hiện tại
-        self.cart.Items.push(item);
-        var temp = 0;
-        self.cart.Items.forEach(function(item, index){
-            temp+=item.price;
-        })
+    'setCurCart': function(cart){ 
+        self.cart=cart;
+    },
+    'addItemCurCart': function(item, kilogramType,numOfBag){ 
+        var isExist = false;
+        if(self.cart.OrderDetails!=null){
+            self.cart.OrderDetails.forEach(function(detail, index){
+                if (detail.Item._id == item._id && detail.kilogramType==kilogramType ){
+                    isExist = true;
+                    detail.numOfKilogramType=detail.numOfKilogramType+numOfBag;
+                }
+            });
+        }
+        if (!isExist){
+            var detailTemp = {};
+            detailTemp.Item = item;
+            detailTemp.numOfKilogramType = numOfBag;
+            detailTemp.kilogramType=kilogramType;
+            self.cart.OrderDetails.push(detailTemp);
+        }
+        var temp =0;
+        self.cart.OrderDetails.forEach(function(detail,index){
+          //temp += detail.Item.price*detail.NumGas + detail.Item.priceFull*detail.NumGasAndCylinder;
+          temp+=detail.Item.price*detail.kilogramType*detail.numOfKilogramType;
+        });
         self.cart.Total = temp;
     },
     'emptyCurCart': function(){ // Hàm lấy user hiện tại
-        self.cart.Items= [];
+        self.cart.OrderDetails= [];
         self.cart.Total = 0;
     },
-    'removeItemCurCart': function(item){ // Hàm lấy user hiện tại
-        var index = self.cart.Items.indexOf(item);
-        self.cart.Items.splice(index,1);
-        var temp = 0;
-        self.cart.Items.forEach(function(item, index){
-            temp+=item.price;
-        })
+    'removeDetailFromCart': function(detail){ // Hàm lấy user hiện tại
+        var index = self.cart.OrderDetails.indexOf(detail);
+        self.cart.OrderDetails.splice(index,1);
+        var temp =0;
+        self.cart.OrderDetails.forEach(function(detail,index){
+          temp += detail.Item.price*detail.kilogramType*detail.numOfKilogramType;
+        });
+        self.cart.Total = temp;
+    },
+    'cartOrdered': function(){ 
+        
+        var temp =0;
+        self.cart.OrderDetails.forEach(function(detail,index){
+          temp += detail.Item.price*detail.kilogramType*detail.numOfKilogramType;
+        });
         self.cart.Total = temp;
     },
     'updateCart': function(){ // Hàm cập nhật thông tin user
         var d = $q.defer();
-        $http.put("http://192.168.1.7:3000/api/carts/"+self.cart._id,self.cart)
+        $http.put("http://192.168.121.2:3000/api/carts/"+self.cart._id,self.cart)
         .success(function(data){
           d.resolve("success");
         })
@@ -113,7 +139,7 @@ angular.module('app.services', [])
     },
     'getCartByUserId': function(userId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.1.7:3000/api/carts/"+userId)
+        $http.get("http://192.168.121.2:3000/api/carts/"+userId)
         .success(function(data){
           self.cart = data;
           console.log("Đã lay cart:"+ JSON.stringify(data));
@@ -128,10 +154,10 @@ angular.module('app.services', [])
     'addCart': function(userId){ // Hàm thêm user
         var tempCart = {};
         tempCart.OwnerId = userId;
-        tempCart.Items = [];
+        tempCart.OrderDetails = [];
         tempCart.Total = 0;
         var d = $q.defer();
-        $http.post("http://192.168.1.7:3000/api/carts",tempCart)
+        $http.post("http://192.168.121.2:3000/api/carts",tempCart)
         .success(function(data){
           self.cart = data;
           console.log("User k có cart nên tạo cart mới" + userId);
@@ -170,7 +196,7 @@ angular.module('app.services', [])
     var self = {  // tạo một đối tượng service, chứa các hàm và biến
     'getOrderByUserId': function(userId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.1.7:3000/api/orders/1/"+userId)
+        $http.get("http://192.168.121.2:3000/api/orders/1/"+userId)
         .success(function(data){
           d.resolve(data);
         })
@@ -181,7 +207,7 @@ angular.module('app.services', [])
     },
     'getOrderById': function(itemId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.1.7:3000/api/orders/"+itemId)
+        $http.get("http://192.168.121.2:3000/api/orders/"+itemId)
         .success(function(data){
           d.resolve(data);
         })
@@ -192,7 +218,7 @@ angular.module('app.services', [])
     },
     'addOrder': function(newOrder){ // Hàm thêm một order mới
         var d = $q.defer();
-        $http.post("http://192.168.1.7:3000/api/orders/",newOrder) 
+        $http.post("http://192.168.121.2:3000/api/orders/",newOrder) 
         .success(function(data){
           d.resolve(data);
         })

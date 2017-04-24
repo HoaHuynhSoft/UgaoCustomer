@@ -2,11 +2,6 @@
     <ion-content class="has-header" padding="true">
       <div class="row text-center">
         <div class = "col">
-            <p style="color: blueviolet; font-size: 16px;">
-          <strong> {{curOrder.Items.length}} Sản phẩm</strong>
-        </p>
-        </div>
-        <div class = "col">
           <p style="color: blueviolet; font-size: 16px;">Tổng:
           <strong> {{curOrder.Total| currency:"":0}}đ</strong>
         </p>
@@ -19,38 +14,38 @@
         </div>
         <ion-list ng-show="!headerInfo">
             <ion-item class = "item-remove-animate item-icon-left" >
-                <h2>Tên: {{curOrder.Name}}</h2>
+                <p>Tên: {{curOrder.Name}}</p>
                 <i class="icon ion-chevron-right icon-accessory"></i>
             </ion-item>
             <ion-item class = "item-remove-animate item-icon-left" >
-                <h2>Sđt: {{curOrder.PhoneNumber}}</h2>
+                <p>Sđt: {{curOrder.PhoneNumber}}</p>
                 <i class="icon ion-chevron-right icon-accessory"></i>   
             </ion-item>
             <ion-item class = "item-remove-animate item-icon-left" >
-                <h2>Đ/c: {{curOrder.Address}}</h2>
+                <p>Đ/c: {{curOrder.Address}}</p>
                 <i class="icon ion-chevron-right icon-accessory"></i>
             </ion-item>
             <ion-item class = "item-remove-animate item-icon-left" >
-                <h2>Ghi chú: {{curOrder.Note}}</h2>
+                <p>Ghi chú: {{curOrder.Note}}</p>
                 <i class="icon ion-chevron-right icon-accessory"></i>
             </ion-item>
             <div class="row">
           </div>
         </ion-list>
      </div>
-      <div ng-repeat="item in curOrder.Items track by $index"   >
+      <div ng-repeat="detail in curOrder.OrderDetails track by $index"   >
         <div class="list card" >
-
           <div class="item item-body" >
             <div class= "row">
-			    <div class= "col col-50">
-                    <img ng-src="{{'img/'+ item.image+'.jpg'}}" width="50%" height="auto" style="box-shadow: none;margin-top: 10px;">
-			    </div>
-			    <div class= "col">
-            <p style="margin-top: 5px; font-size: 12px"><strong> {{item.name}}đ</strong></p>
-            <p style="margin-top: 5px; font-size: 12px"><strong> {{item.price| currency:"":0}}đ</strong></p>
-				</div>
-			</div>
+                <div class= "col col-40">
+                  <img ng-src="{{'img/'+ detail.Item.image+'.jpg'}}" width="80%" height="auto" style="box-shadow: none;">
+                </div>
+               <div class= "col" >
+                  <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 10px;">Tên<strong> {{detail.Item.name}}</strong></p>
+                  <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Giá: <strong>{{detail.Item.price| currency:"":0}}đ/Kg</strong></strong></p>
+                  <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Loại bao <strong>{{detail.kilogramType}} Kg</strong></p>
+                </div>
+						</div>
           </div>
         </div>
       </div>

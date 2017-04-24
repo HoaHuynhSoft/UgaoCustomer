@@ -5,7 +5,7 @@
 			   <div class="app-icon"></div>
               <label class="item item-input item-floating-label">
                 <span style="color: #9F9F9F;"  class="input-label">Tên đăng nhập*</span>
-                <input style="color: #dimgray;" ng-model="user.Name" type="text" placeholder="Tên đăng nhập*">
+                <input style="color: #dimgray;" ng-model="user.UserName" type="text" placeholder="Tên đăng nhập*">
               </label>
               <label class="item item-input item-floating-label">
                   <span style="color: #9F9F9F;" class="input-label">Mật khẩu*</span>
@@ -13,7 +13,7 @@
               </label>
               <label class="item item-input item-floating-label">
                 <span style="color: #9F9F9F;" class="input-label">Số điện thoại*</span>
-                <input style="color: #dimgray;" ng-model="user.Phone" type="tel" placeholder="Số điện thoại*">
+                <input style="color: #dimgray;" ng-model="user.Phone" type="number" placeholder="Số điện thoại*">
               </label>
               <label class="item item-input item-floating-label">
                 <span style="color: #9F9F9F;"  class="input-label">Tên đầy đủ</span>
@@ -31,7 +31,7 @@
 
             </ion-list>
             <div style="width: 279px; height: 35px;" class="spacer"></div>
-            <button ng-click="signupEmail(signupForm,user)" class=" button button-royal  button-block  icon-left ion-ios-paperplane-outline " style="border-radius:0px 0px 0px 0px;" id="signup-button3">Đăng kí & đăng nhập</button>        
+            <button ng-click="signupEmail()" class=" button button-royal  button-block  icon-left ion-ios-paperplane-outline " style="border-radius:0px 0px 0px 0px;" id="signup-button3">Đăng kí & đăng nhập</button>        
             </form>
     </ion-content>
 </ion-view>
