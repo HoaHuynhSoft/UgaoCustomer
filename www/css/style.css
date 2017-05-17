@@ -3,10 +3,10 @@
     color: white !important;
 }
 .estimateLevel2{
-    color: gold !important;
+    color:#fefffe !important
 }
 .estimateLevel3{
-    color: gray !important;
+    color: #ddd !important;
 }
 .popup {
     width: 95%;
@@ -482,8 +482,33 @@ margin-top:10px;
       background-color:green;
   }
   .emergency{
-      background-color:red;
+          /* background: #ee0979; */
+    background: -webkit-linear-gradient(to right, #ee0979, #ff6a00);
+    /* background: linear-gradient(to top, #ee0979, #ff6a00); */
+    background: linear-gradient(to top, #f7051c, #886aea);
   }
   .inUsing{
-    background-color: #886aea;
+     
+  background: #886aea; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #886aea, #66ff00); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #886aea, #66ff00);
   }
+  .scrollhoriz {
+height: 250px;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+.popup-container .popup {
+    width: 85%;
+    }
+@media(device-width: 768px) and (device-height: 1024px){
+    ::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 7px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: rgba(0,0,0,.5);
+        -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+    }
+}

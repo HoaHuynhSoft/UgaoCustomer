@@ -129,6 +129,16 @@ angular.module('app.controllers', [])
       $ionicHistory.clearHistory();
       $ionicHistory.clearCache();
     }
+    sharedUtils.showLoading();
+    ItemService.getAllItems()
+    .then(function success(data){
+        $scope.Products=data;
+        $scope.items=data;
+        sharedUtils.hideLoading();
+    }, function error(msg){
+      sharedUtils.hideLoading();
+      console.log(msg);
+    });
   });
   $scope.searchChange = function(){
     console.log($scope.search.filterOrder);
@@ -145,16 +155,7 @@ angular.module('app.controllers', [])
     }
   }
  $scope.loadItems = function() {
-    sharedUtils.showLoading();
-    ItemService.getAllItems()
-    .then(function success(data){
-        $scope.Products=data;
-        $scope.items=data;
-        sharedUtils.hideLoading();
-    }, function error(msg){
-      sharedUtils.hideLoading();
-      console.log(msg);
-    });
+    
   }
   $scope.itemClick=function (item) {
     $scope.curItemClick=item;
@@ -245,7 +246,7 @@ angular.module('app.controllers', [])
         $scope.curUser = UserService.getCurUser();
         if ($scope.curUser.DayRemain >10){
           $scope.estimateLevel = 'estimateLevel2';
-           $scope.outOfStockNor='normal';
+           $scope.outOfStockNor='inUsing';
         } 
         else //if ($scope.curUser.DayRemain <5)
         {
@@ -274,7 +275,7 @@ angular.module('app.controllers', [])
     });
     $scope.order=function(){
         console.log(JSON.stringify($scope.curCart));
-        if ($scope.curCart.OrderDetails.length <1)  {
+        if ($scope.curCart.OrderDetails.length <1 || $scope.curCart.OrderDetails===undefined)  {
            sharedUtils.showAlert("warning","Bạn chưa chọn sản phẩm nào cả, vui lòng chọn một sản phẩm ở màn hình chính");
            $state.go('home');
            //return;
@@ -306,7 +307,7 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('indexCtrl', function($scope,$window,UserService,$rootScope,sharedUtils,$ionicHistory,$state,$ionicSideMenuDelegate) {
+.controller('indexCtrl', function($window,$scope,$window,UserService,$rootScope,sharedUtils,$ionicHistory,$state,$ionicSideMenuDelegate) {
     $scope.logout=function(){
       $ionicSideMenuDelegate.toggleLeft(); //To close the side bar
         $ionicSideMenuDelegate.canDragContent(false);  // To remove the sidemenu white space
@@ -334,7 +335,7 @@ angular.module('app.controllers', [])
     $scope.items={};
     $scope.weight=10; 
     $scope.data={};
-    $scope.data.numOfBag =1;
+    $scope.data.numOfBag=1;
     $scope.clientSideList = [
       { text: "10 kg", value: 10 },
       { text: "20 kg", value: 20 },
@@ -372,7 +373,7 @@ angular.module('app.controllers', [])
     }
     $scope.$on('$ionicView.enter', function(ev) {
         $scope.curUser = UserService.getCurUser();
-         $scope.curCart = CartService.getCurCart();
+        $scope.curCart = CartService.getCurCart();
         $scope.curItems = 
         $rootScope.numCartItems = $scope.curCart.OrderDetails.length;
         if ( $rootScope.numCartItems ==0){

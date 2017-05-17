@@ -8,7 +8,7 @@ angular.module('app.services', [])
     },
     'getUser': function(login){  // Hàm lấy user
         var d = $q.defer();
-        $http.get("http://192.168.121.2:3000/api/users/"+login.UserName)
+        $http.get("http://192.168.1.200:3000/api/users/"+login.UserName)
         .success(function(data){
           self.curUser = data;
           d.resolve(data);
@@ -20,7 +20,7 @@ angular.module('app.services', [])
     },
     'addUser': function(user){ // Hàm thêm user
         var d = $q.defer();
-        $http.post("http://192.168.121.2:3000/api/users/",user)
+        $http.post("http://192.168.1.200:3000/api/users/",user)
         .success(function(data){
           self.curUser = data;
           d.resolve("success");
@@ -32,7 +32,8 @@ angular.module('app.services', [])
     },
     'updateUser': function(newUser){ // Hàm cập nhật thông tin user
         var d = $q.defer();
-        $http.put("http://192.168.121.2:3000/api/users/"+newUser._id,newUser)
+        console.log(newUser);
+        $http.put("http://192.168.1.200:3000/api/users/"+newUser._id,newUser)
         .success(function(data){
           d.resolve("success");
         })
@@ -49,7 +50,7 @@ angular.module('app.services', [])
     'items' : [], // chứa posts lấy về
     'getItemById': function(itemId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.121.2:3000/api/items/"+itemId)
+        $http.get("http://192.168.1.200:3000/api/items/"+itemId)
         .success(function(data){
           d.resolve(data);
         })
@@ -60,7 +61,7 @@ angular.module('app.services', [])
     },
     'getAllItems': function(){ // Hàm lấy tất cả các bài post hiện tại
         var d = $q.defer();
-        $http.get("http://192.168.121.2:3000/api/items")
+        $http.get("http://192.168.1.200:3000/api/items")
         .success(function(data){
           d.resolve(data);
         })
@@ -128,7 +129,7 @@ angular.module('app.services', [])
     },
     'updateCart': function(){ // Hàm cập nhật thông tin user
         var d = $q.defer();
-        $http.put("http://192.168.121.2:3000/api/carts/"+self.cart._id,self.cart)
+        $http.put("http://192.168.1.200:3000/api/carts/"+self.cart._id,self.cart)
         .success(function(data){
           d.resolve("success");
         })
@@ -139,7 +140,7 @@ angular.module('app.services', [])
     },
     'getCartByUserId': function(userId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.121.2:3000/api/carts/"+userId)
+        $http.get("http://192.168.1.200:3000/api/carts/"+userId)
         .success(function(data){
           self.cart = data;
           console.log("Đã lay cart:"+ JSON.stringify(data));
@@ -152,12 +153,17 @@ angular.module('app.services', [])
         return d.promise;
     },
     'addCart': function(userId){ // Hàm thêm user
+        var d = $q.defer();
         var tempCart = {};
         tempCart.OwnerId = userId;
+        if(userId===undefined){
+            d.reject("error");
+            return d.promise;
+        }
         tempCart.OrderDetails = [];
         tempCart.Total = 0;
-        var d = $q.defer();
-        $http.post("http://192.168.121.2:3000/api/carts",tempCart)
+        
+        $http.post("http://192.168.1.200:3000/api/carts",tempCart)
         .success(function(data){
           self.cart = data;
           console.log("User k có cart nên tạo cart mới" + userId);
@@ -196,7 +202,7 @@ angular.module('app.services', [])
     var self = {  // tạo một đối tượng service, chứa các hàm và biến
     'getOrderByUserId': function(userId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.121.2:3000/api/orders/1/"+userId)
+        $http.get("http://192.168.1.200:3000/api/orders/1/"+userId)
         .success(function(data){
           d.resolve(data);
         })
@@ -207,7 +213,7 @@ angular.module('app.services', [])
     },
     'getOrderById': function(itemId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.121.2:3000/api/orders/"+itemId)
+        $http.get("http://192.168.1.200:3000/api/orders/"+itemId)
         .success(function(data){
           d.resolve(data);
         })
@@ -218,7 +224,7 @@ angular.module('app.services', [])
     },
     'addOrder': function(newOrder){ // Hàm thêm một order mới
         var d = $q.defer();
-        $http.post("http://192.168.121.2:3000/api/orders/",newOrder) 
+        $http.post("http://192.168.1.200:3000/api/orders/",newOrder) 
         .success(function(data){
           d.resolve(data);
         })

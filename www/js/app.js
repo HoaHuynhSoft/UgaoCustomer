@@ -12,7 +12,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
     $ionicConfigProvider.scrolling.jsScrolling(false);
     $ionicConfigProvider.tabs.position('bottom'); // other values: top
 })
-.run(function($ionicPlatform,$rootScope) {
+.run(function($state,$ionicPlatform,$rootScope) {
   $rootScope.extras = false;
 
   $ionicPlatform.ready(function() {
@@ -40,11 +40,11 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
     FCMPlugin.onNotification(
       function(data){
         if(data.wasTapped){
-          //Notification was received on device tray and tapped by the user.
-          alert( JSON.stringify(data) );
+          if(data.type =="1")
+            $state.go('orderDetail',{id: data.id});
+          else  if(data.type =="2")
+            $state.go('orders');
         }else{
-          //Notification was received in foreground. Maybe the user needs to be notified.
-          alert( JSON.stringify(data) );
         }
       },
       function(msg){

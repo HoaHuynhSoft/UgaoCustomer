@@ -42,9 +42,10 @@
               </div>
           </ion-list>
       </div>
-      <div class="item item-divider item-icon-right" style="box-shadow: 1px 1px 5px #888888;" ng-click = "ShowProductsInCart()">
+      <div class="card">
+          <div class="item item-divider item-icon-right" ng-click = "ShowProductsInCart()">
             <i class="icon" ng-class="{'ion-ios-arrow-right':showProducts,'ion-ios-arrow-down':!showProducts}"></i>
-            Giỏ Hàng ({{$root.numCartItems}} Sản phẩm)
+           Giỏ Hàng ({{$root.numCartItems}} Sản phẩm)
           </div>
           <div ng-show="!showProducts">
           <div class="item item-body"  ng-repeat="detail in curCart.OrderDetails track by $index" style="margin-top:5px; margin-bottom: 5px; padding-bottom: 0px">
@@ -56,9 +57,10 @@
                   <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 10px;">Tên:<strong> {{detail.Item.name}}</strong></p>
                   <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Giá: <strong>{{detail.Item.price| currency:"":0}}đ/Kg</strong></strong></p>
                   <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Loại bao: <strong>{{detail.kilogramType}} Kg</strong></p>
+                  <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Số bao: <strong>{{detail.numOfKilogramType}} Bao</strong></p>
                 </div>
 						</div>
-            <div class= "row text-center" style="margin-top: -20px">
+            <!--<div class= "row text-center" style="margin-top: -20px">
               <div class= "col col-40" style="margin-bottom: 0px;margin-top: 0px;">
               </div>
               <div class= "col " style="margin-bottom: 0px;margin-top: 0px;">
@@ -70,12 +72,14 @@
               <div class= "col" style="margin-bottom: 0px;margin-top: 0px;">
                    <input style="color: dimgray; font-size: 12px;padding-bottom: 0px !important;padding-top: 0px !important;;background: transparent;width:30px" type="text" value=" Bao" disabled="disabled">
               </div>
-            </div>
+            </div>-->
             <div class="button-bar" style="box-shadow: none;">
                 <button ng-click="removeFromCart(detail)" class="button button-dark button-block button-small icon ion-android-delete" ></button>
             </div>
           </div>
           </div>
+          </div>
+          
           <div class="card" style="box-shadow: 0 0px 0px 0 rgba(0,0,0,.26);">
             <div class="item item-divider item-icon-right" style="border-color: transparent;background-color: #ef473a; color: #fff;" ng-click = "headerAddProductClick()">
             <i class="icon" ng-class="{'ion-ios-arrow-right':headerAddProduct,'ion-ios-arrow-down':!headerAddProduct}"></i>
@@ -84,7 +88,7 @@
             <!--<button class="button button-block icon-right ion-chevron-right button-calm button-assertive" style="margin-top: 0px; margin-bottom: 0px;" ng-click = "headerAddProductClick()">
               ssss
             </button>-->
-        <div  ng-show="!headerAddProduct">
+        <div class="scrollhoriz"  ng-show="!headerAddProduct">
             <div class="row" ng-repeat="item in items track by $index " ng-if="$index % 2 === 0">
 
 
@@ -96,7 +100,7 @@
                   <div style="padding-left: 5px;">
                     <p style="width: 120px;color: black;font-weight: bold; font-size: 16px; margin-bottom:0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">{{items[$index].name}}</p>
                     <p style="color: dimgray; font-size: 12px;margin-bottom:0px;">Giá: <strong>{{items[$index].price| currency:"":0}}đ/1kg</strong></p>
-                    <!--<p style="color: dimgray; font-size: 12px">Gas + Vỏ: <strong>{{items[$index].priceFull| currency:"":0}}đ</strong></p>-->
+                    
                   </div>
                   <div class="button-bar">
                     <button class="button button-outline button-small button-balanced" style="font-size:12px; padding-right:5px;padding-left:5px;" ng-click = "AddToCart(items[$index])">Thêm vào đơn hàng</button>
@@ -122,7 +126,5 @@
         </div>
      </div>
     </ion-content>
-      <div id="floating-button" data-toggle="tooltip" data-placement="left" ui-sref="addProduct" ng-click="headerAddProductClick()">
-        <p class="plus">+</p>
-      </div>
+      
 </ion-view>
