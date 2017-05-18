@@ -664,7 +664,7 @@ angular.module('app.controllers', [])
   $scope.passClick = function(){
     $scope.passData = {};
     var myPopup = $ionicPopup.show({
-      template: '<label class="item item-input"><input type="text" ng-model="passData.passOld" placeholder="Nhập mật khẩu cũ" > </label><label class="item item-input"><input type="text" ng-model="data.passNew" placeholder="Nhập mật khẩu mới"> </label>',
+      template: '<label class="item item-input"><input type="password" ng-model="passData.passOld" placeholder="Nhập mật khẩu cũ" > </label><label class="item item-input"><input type="password" ng-model="passData.passNew" placeholder="Nhập mật khẩu mới"> </label>',
       title: 'Đổi mật khẩu',
       scope: $scope,
       buttons: [
@@ -673,7 +673,7 @@ angular.module('app.controllers', [])
           text: '<b>Lưu</b>',
           type: 'button-positive',
           onTap: function(e) {
-            if ($scope.curUser.Pass ==$scope.passData.passOld && !$scope.passData.passNew){
+            if ($scope.curUser.Pass == $scope.passData.passOld && !$scope.passData.passNew){
               $scope.curUser.Pass = $scope.passData.passNew;
               UserService.updateUser($scope.curUser)
               .then(function success(data){
