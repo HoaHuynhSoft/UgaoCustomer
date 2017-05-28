@@ -47,8 +47,8 @@
             <i class="icon" ng-class="{'ion-ios-arrow-right':showProducts,'ion-ios-arrow-down':!showProducts}"></i>
            Giỏ Hàng ({{$root.numCartItems}} Sản phẩm)
           </div>
-          <div ng-show="!showProducts">
-          <div class="item item-body"  ng-repeat="detail in curCart.OrderDetails track by $index" style="margin-top:5px; margin-bottom: 5px; padding-bottom: 0px">
+          <div class="scrollhoriz" ng-show="!showProducts">
+          <div class="item item-body"  ng-repeat="detail in curCart.OrderDetails track by $index" style="margin-top:5px; margin-bottom: 5px; padding-bottom: 0px; border-width: 0px;">
             <div class= "row">
                 <div class= "col col-40">
                   <img ng-src="{{'img/'+ detail.Item.image+'.jpg'}}" width="80%" height="auto" style="box-shadow: none;">
@@ -60,19 +60,6 @@
                   <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Số bao: <strong>{{detail.numOfKilogramType}} Bao</strong></p>
                 </div>
 						</div>
-            <!--<div class= "row text-center" style="margin-top: -20px">
-              <div class= "col col-40" style="margin-bottom: 0px;margin-top: 0px;">
-              </div>
-              <div class= "col " style="margin-bottom: 0px;margin-top: 0px;">
-                   <input style="color: dimgray; font-size: 12px; width: 70px;padding-bottom: 0px !important;padding-top: 0px !important;;background: transparent;" type="text" value="Số bao đặt:" disabled="disabled">
-              </div>
-              <div class= "col" style="margin-bottom: 0px;margin-top: 0px;">
-                   <input style="color: dimgray; font-size: 12px;padding-bottom: 0px !important;padding-top: 0px !important;; width:50px;text-align: right;" type="number" ng-model="detail.numOfKilogramType" ng-change="numBagChange(detail)">
-              </div>
-              <div class= "col" style="margin-bottom: 0px;margin-top: 0px;">
-                   <input style="color: dimgray; font-size: 12px;padding-bottom: 0px !important;padding-top: 0px !important;;background: transparent;width:30px" type="text" value=" Bao" disabled="disabled">
-              </div>
-            </div>-->
             <div class="button-bar" style="box-shadow: none;">
                 <button ng-click="removeFromCart(detail)" class="button button-dark button-block button-small icon ion-android-delete" ></button>
             </div>
@@ -80,7 +67,7 @@
           </div>
           </div>
           
-          <div class="card" style="box-shadow: 0 0px 0px 0 rgba(0,0,0,.26);">
+          <div class="card" style="box-shadow: 1 0px 0px 0 rgba(0,0,0,.26);">
             <div class="item item-divider item-icon-right" style="border-color: transparent;background-color: #ef473a; color: #fff;" ng-click = "headerAddProductClick()">
             <i class="icon" ng-class="{'ion-ios-arrow-right':headerAddProduct,'ion-ios-arrow-down':!headerAddProduct}"></i>
             Thêm sản phẩm
@@ -89,6 +76,10 @@
               ssss
             </button>-->
         <div class="scrollhoriz"  ng-show="!headerAddProduct">
+            <label class="item item-input" style="background-color: aliceblue;">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" ng-model="search.filterOrder" ng-change="searchChange()" placeholder="Tìm theo tên sản phẩm" >
+            </label>
             <div class="row" ng-repeat="item in items track by $index " ng-if="$index % 2 === 0">
 
 

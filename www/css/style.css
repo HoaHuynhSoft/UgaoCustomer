@@ -494,7 +494,7 @@ margin-top:10px;
   background: linear-gradient(to bottom, #886aea, #66ff00);
   }
   .scrollhoriz {
-height: 250px;
+height: 280px;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
 }

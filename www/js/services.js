@@ -1,7 +1,9 @@
+var hostURL='https://ugaoserver.herokuapp.com/api/';
+var headers = {"Authorization": "Basic dXNlcjoxMjM0NTY="};
 angular.module('app.services', [])
 
 .factory("UserService", function($http,$q){ // Service cho user
-    var headers = {"Authorization": "Basic YWJjOjEyMw=="};
+    
   var self = { 
     'curUser' : {},
     'getCurUser': function(){ // Hàm lấy user hiện tại
@@ -9,7 +11,7 @@ angular.module('app.services', [])
     },
     'getUser': function(login){  // Hàm lấy user
         var d = $q.defer();
-        $http.get("http://192.168.1.200:3000/api/users/"+login.UserName,{headers: headers})
+        $http.get( hostURL +"users/"+login.UserName,{headers: headers})
         .success(function(data){
           self.curUser = data;
           d.resolve(data);
@@ -21,7 +23,7 @@ angular.module('app.services', [])
     },
     'addUser': function(user){ // Hàm thêm user
         var d = $q.defer();
-        $http.post("http://192.168.1.200:3000/api/users/",user,{headers: headers})
+        $http.post( hostURL +"users/",user,{headers: headers})
         .success(function(data){
           self.curUser = data;
           d.resolve("success");
@@ -34,7 +36,7 @@ angular.module('app.services', [])
     'updateUser': function(newUser){ // Hàm cập nhật thông tin user
         var d = $q.defer();
         console.log(newUser);
-        $http.put("http://192.168.1.200:3000/api/users/"+newUser._id,newUser,{headers: headers})
+        $http.put( hostURL +"users/"+newUser._id,newUser,{headers: headers})
         .success(function(data){
           d.resolve("success");
         })
@@ -47,12 +49,12 @@ angular.module('app.services', [])
   return self;
 })
 .factory("ItemService", function($http,$q){ // Service cho post
-    var headers = {"Authorization": "Basic YWJjOjEyMw=="};
+    
   var self = {  // tạo một đối tượng service, chứa các hàm và biến
     'items' : [], // chứa posts lấy về
     'getItemById': function(itemId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.1.200:3000/api/items/"+itemId,{headers: headers})
+        $http.get( hostURL +"items/"+itemId,{headers: headers})
         .success(function(data){
           d.resolve(data);
         })
@@ -63,7 +65,7 @@ angular.module('app.services', [])
     },
     'getAllItems': function(){ // Hàm lấy tất cả các bài post hiện tại
         var d = $q.defer();
-        $http.get("http://192.168.1.200:3000/api/items",{headers: headers})
+        $http.get( hostURL +"items",{headers: headers})
         .success(function(data){
           d.resolve(data);
         })
@@ -76,7 +78,7 @@ angular.module('app.services', [])
   return self;
 })
 .factory("CartService", function($http,$q){ // Service cho post
-    var headers = {"Authorization": "Basic YWJjOjEyMw=="};
+    
   var self = {  // tạo một đối tượng service, chứa các hàm và biến
     'cart' : {}, // chứa posts lấy về
     'getCurCart': function(){ 
@@ -132,7 +134,7 @@ angular.module('app.services', [])
     },
     'updateCart': function(){ // Hàm cập nhật thông tin user
         var d = $q.defer();
-        $http.put("http://192.168.1.200:3000/api/carts/"+self.cart._id,self.cart,{headers: headers})
+        $http.put(hostURL +"carts/"+self.cart._id,self.cart,{headers: headers})
         .success(function(data){
           d.resolve("success");
         })
@@ -143,7 +145,7 @@ angular.module('app.services', [])
     },
     'getCartByUserId': function(userId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.1.200:3000/api/carts/"+userId,{headers: headers})
+        $http.get( hostURL +"carts/"+userId,{headers: headers})
         .success(function(data){
           self.cart = data;
           console.log("Đã lay cart:"+ JSON.stringify(data));
@@ -166,7 +168,7 @@ angular.module('app.services', [])
         tempCart.OrderDetails = [];
         tempCart.Total = 0;
         
-        $http.post("http://192.168.1.200:3000/api/carts",tempCart,{headers: headers})
+        $http.post( hostURL +"carts",tempCart,{headers: headers})
         .success(function(data){
           self.cart = data;
           console.log("User k có cart nên tạo cart mới" + userId);
@@ -202,11 +204,11 @@ angular.module('app.services', [])
 
 })
 .factory('OrderService', function($http,$q){
-    var headers = {"Authorization": "Basic YWJjOjEyMw=="};
+    
     var self = {  // tạo một đối tượng service, chứa các hàm và biến
     'getOrderByUserId': function(userId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.1.200:3000/api/orders/1/"+userId,{headers: headers})
+        $http.get( hostURL +"orders/1/"+userId,{headers: headers})
         .success(function(data){
           d.resolve(data);
         })
@@ -217,7 +219,7 @@ angular.module('app.services', [])
     },
     'getOrderById': function(itemId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
-        $http.get("http://192.168.1.200:3000/api/orders/"+itemId,{headers: headers})
+        $http.get( hostURL +"orders/"+itemId,{headers: headers})
         .success(function(data){
           d.resolve(data);
         })
@@ -228,7 +230,7 @@ angular.module('app.services', [])
     },
     'addOrder': function(newOrder){ // Hàm thêm một order mới
         var d = $q.defer();
-        $http.post("http://192.168.1.200:3000/api/orders/",newOrder,{headers: headers}) 
+        $http.post( hostURL +"orders/",newOrder,{headers: headers}) 
         .success(function(data){
           d.resolve(data);
         })

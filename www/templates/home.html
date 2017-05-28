@@ -5,10 +5,7 @@
 				<input type="text" ng-model="search.filterOrder" ng-change="searchChange()" placeholder="Tìm theo tên sản phẩm" >
    	</label>
 		<div class="row" ng-repeat="item in items track by $index " ng-if="$index % 2 === 0">
-
-
 			<div class="col col-45" ng-if="$index < items.length" style="border-bottom: 3px solid #886aea;"  >
-
 				  <div  style="border-width: 0px; border-style: none;display: block; display: flex;align-items: center;justify-content: center;height: 150px!important;">
 						<img ng-src="{{'img/'+ items[$index].image +'.jpg'}}" style="height: 100%; width: auto; max-width: 100%;" ng-click = "itemClick(items[$index])"/>
 				  </div>
@@ -38,10 +35,6 @@
 					</div>
 			</div>
 		</div>
-		<div class="row"> <div style="height: 100px;"></div></div>
-						  
+		<div class="row"> <div style="height: 100px;"></div></div>					  
 	</ion-content>
-	<!--<div id="floating-button" data-toggle="tooltip" data-placement="left" ui-sref="myCart">
-							<p class="plus">Đặt</p>
-						</div>-->
 </ion-view>
