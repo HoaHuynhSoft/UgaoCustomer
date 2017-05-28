@@ -479,7 +479,7 @@ angular.module('app.controllers', [])
           // Navigation to Order details
           $state.go('orderDetail',{id: data._id});
       }, function error(msg){
-          sharedUtils.showAlert("warning","Đã có lỗi xảy ra, Vui lòng liên hệ đại lý để được hỗ trợ");
+          sharedUtils.showAlert("warning",msg.error);
       });
   };
   $scope.AddToCart=function(item){

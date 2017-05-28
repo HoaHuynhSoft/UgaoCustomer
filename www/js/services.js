@@ -1,4 +1,5 @@
-var hostURL='https://ugaoserver.herokuapp.com/api/';
+//var hostURL='https://ugaoserver.herokuapp.com/api/';
+var hostURL='http://localhost:3000/api/';
 var headers = {"Authorization": "Basic dXNlcjoxMjM0NTY="};
 angular.module('app.services', [])
 
@@ -235,7 +236,8 @@ angular.module('app.services', [])
           d.resolve(data);
         })
         .error(function(msg){
-            d.reject("error");
+            console.log(msg);
+            d.reject(msg);
         });
         return d.promise;
     }
