@@ -42,8 +42,11 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
         if(data.wasTapped){
           if(data.type =="1")
             $state.go('orderDetail',{id: data.id});
-          else  if(data.type =="2")
+          if(data.type =="2")
             $state.go('orders');
+          if(data.type=="3"){
+            $state.go('rereminder');
+          }
         }else{
         }
       },
