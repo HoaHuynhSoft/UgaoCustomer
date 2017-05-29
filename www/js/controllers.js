@@ -49,23 +49,37 @@ angular.module('app.controllers', [])
             if((user.UserName.toLowerCase() == data.UserName.toLowerCase()) && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
               $window.localStorage['username'] = user.UserName;
               $window.localStorage['pass'] = user.Pass;
-              $scope.getCart();
-              $rootScope.userName = data.FullName;
-              data.PushToken = $rootScope.PushToken;
-              UserService.updateUser(data);
-              //$rootScope.numCartItems = CartService.cart.OrderDetails.length;
-              $ionicHistory.nextViewOptions({
-                historyRoot: true
+              
+              CartService.getCartByUserId( UserService.getCurUser()._id)
+              .then(function success(cart){
+                  console.log("cur cart"+ JSON.stringify(cart));
+                  if (cart===null){
+                    CartService.addCart(UserService.getCurUser()._id)
+                    .then(function success(newcart){
+                      $rootScope.numCartItems = 0;
+                    }, function error(msg){
+                      sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");;
+                    });
+                  }
+                  $rootScope.numCartItems=cart===null? 0 : cart.OrderDetails.length;
+                  $ionicHistory.nextViewOptions({
+                    historyRoot: true
+                  });
+                  $ionicSideMenuDelegate.canDragContent(true);  // Sets up the sideMenu dragable
+                  $rootScope.extras = true;
+                  sharedUtils.hideLoading();
+                    
+                  if(data.isActive)
+                    $state.go('reminder', {}, {location: "replace"});
+                  else
+                  $state.go('home', {}, {location: "replace"});
+                  $scope.user = {};
+              }, function error(msg){
+                sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
               });
-              $ionicSideMenuDelegate.canDragContent(true);  // Sets up the sideMenu dragable
-              $rootScope.extras = true;
-              sharedUtils.hideLoading();
-                
-              if(data.isActive)
-                $state.go('reminder', {}, {location: "replace"});
-              else
-              $state.go('home', {}, {location: "replace"});
-              $scope.user = {};
+              
+              //$rootScope.numCartItems = CartService.cart.OrderDetails.length;
+             
             }
               else{
                 sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
@@ -244,7 +258,9 @@ angular.module('app.controllers', [])
       sharedUtils.showLoading();
       $rootScope.extras=true;
       $ionicSideMenuDelegate.canDragContent(true);
+      
       $scope.curUser = UserService.getCurUser();
+
       if ($scope.curUser.DayRemain >10){
         $scope.estimateLevel = 'estimateLevel2';
           $scope.outOfStockNor='inUsing';
@@ -254,25 +270,12 @@ angular.module('app.controllers', [])
           $scope.estimateLevel = 'estimateLevel3';
             $scope.outOfStockNor='emergency';
       } 
-      $scope.monthNo = $scope.curUser.DayRemain / 30;
+      $scope.monthNo = Math.floor($scope.curUser.DayRemain / 30);
       $scope.dayNo =  $scope.curUser.DayRemain % 30;
       $scope.curUser = UserService.getCurUser();
       CartService.getCartByUserId( UserService.getCurUser()._id)
-        .then(function success(data){
-          
-          if (data===null){
-            CartService.addCart(UserService.getCurUser()._id)
-            .then(function success(odata){
-              sharedUtils.hideLoading();
-              $scope.curCart = odata;
-            }, function error(msg){
-              sharedUtils.hideLoading();
-              sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");;
-            });
-          }
-          else{
+        .then(function success(data){                
             $scope.curCart = data;
-          } 
           sharedUtils.hideLoading();
         }, function error(msg){
           sharedUtils.hideLoading();
@@ -382,13 +385,16 @@ angular.module('app.controllers', [])
     sharedUtils.showLoading();
     
     $scope.curUser = UserService.getCurUser();
-    $scope.curCart = CartService.getCurCart();
-    sharedUtils.hideLoading();
+    CartService.getCartByUserId($scope.curUser._id)
+    .then(function success(data){
+          $scope.curCart =data;
+          sharedUtils.hideLoading();
+        }, function error(msg){
+          sharedUtils.hideLoading();
+          sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
+        });
     //$scope.curItems = 
-    $rootScope.numCartItems = $scope.curCart.OrderDetails.length;
-    if($rootScope.numCartItems<1 ){
-      $scope.showProducts=true;
-    }
+    
     if ( $rootScope.numCartItems ==0){
         sharedUtils.showAlert("warning","Giỏ hàng rỗng, chọn ít nhất một sản phẩm để đặt hàng");
         $state.go('home');
@@ -396,6 +402,9 @@ angular.module('app.controllers', [])
   };
   $scope.removeFromCart=function(detail){
     CartService.removeDetailFromCart(detail);
+     if(CartService.getCurCart().OrderDetails.length==0){
+        $scope.showProducts=true;
+      }
     $scope.updateCart();
   };
   $scope.updateCart = function(){
@@ -459,6 +468,15 @@ angular.module('app.controllers', [])
         sharedUtils.showAlert("warning","Cung cấp tối thiểu là số điện thoại để đặt hàng");
         return;
       };
+  CartService.getCartByUserId($scope.curUser._id)
+    .then(function success(data){
+
+        $scope.curCart =data;
+        sharedUtils.hideLoading();
+      }, function error(msg){
+        sharedUtils.hideLoading();
+        sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
+      });
       var order ={};
       order.OwnerId=$scope.curUser._id;
       order.OrderDetails=$scope.curCart.OrderDetails;
@@ -469,9 +487,10 @@ angular.module('app.controllers', [])
       order.Address=$scope.curUser.Address;
       order.Note= $scope.rootNote.Note
       order.OrderDate = new Date();
+      order.ItemChange=false;
       OrderService.addOrder(order)
       .then(function success(data){
-          sharedUtils.showAlert("success","Cảm ơn bạn đã mua hàng, nhân viên của Ugas sẽ gọi trong ít phút tới để xác nhận đơn hàng!");
+          sharedUtils.showAlert("success","Cảm ơn bạn đã mua hàng, nhân viên của Ugao sẽ gọi trong ít phút tới để xác nhận đơn hàng!");
           CartService.cartOrdered();
           CartService.updateCart();
           $scope.curUser.DayRemain = $scope.curUser.DayUse;
@@ -712,8 +731,8 @@ angular.module('app.controllers', [])
   $scope.estimateClick = function(){
     $scope.estimateData = {};
     var myPopup = $ionicPopup.show({
-      template: '<label class="item item-input"><input type="number" ng-model="estimateData.DayUse" placeholder="1 bình xài khoảng ? ngày" > </label><label class="item item-input"><input type="number" ng-model="estimateData.DayRemain" placeholder="Khoảng ? ngày nữa hết Gas"> </label>',
-      title: 'Chỉnh ước tính số ngày xài Gas',
+      template: '<label class="item item-input"><input type="number" ng-model="estimateData.DayUse" placeholder="Ước tính số ngày dùng hết gạo" > </label><label class="item item-input"><input type="number" ng-model="estimateData.DayRemain" placeholder="Khoảng ? ngày nữa hết gạo"> </label>',
+      title: 'Chỉnh ước tính số ngày dùng hết gạo',
       scope: $scope,
       buttons: [
         { text: 'Hủy' },

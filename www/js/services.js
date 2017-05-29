@@ -149,8 +149,8 @@ angular.module('app.services', [])
         $http.get( hostURL +"carts/"+userId,{headers: headers})
         .success(function(data){
           self.cart = data;
-          console.log("Đã lay cart:"+ JSON.stringify(data));
-          console.log("self cart:"+ JSON.stringify(self.cart));
+          //console.log("Đã lay cart:"+ JSON.stringify(data));
+          //console.log("self cart:"+ JSON.stringify(self.cart));
           d.resolve(data);
         })
         .error(function(msg){
@@ -168,7 +168,7 @@ angular.module('app.services', [])
         }
         tempCart.OrderDetails = [];
         tempCart.Total = 0;
-        
+        tempCart.ItemChange=false; 
         $http.post( hostURL +"carts",tempCart,{headers: headers})
         .success(function(data){
           self.cart = data;
