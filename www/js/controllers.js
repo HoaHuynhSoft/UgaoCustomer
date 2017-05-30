@@ -468,38 +468,64 @@ angular.module('app.controllers', [])
         sharedUtils.showAlert("warning","Cung cấp tối thiểu là số điện thoại để đặt hàng");
         return;
       };
-  CartService.getCartByUserId($scope.curUser._id)
-    .then(function success(data){
-
-        $scope.curCart =data;
-        sharedUtils.hideLoading();
-      }, function error(msg){
-        sharedUtils.hideLoading();
-        sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
-      });
-      var order ={};
-      order.OwnerId=$scope.curUser._id;
-      order.OrderDetails=$scope.curCart.OrderDetails;
-      order.Total=$scope.curCart.Total;
-      order.Status=1;
-      order.Name=$scope.curUser.FullName;
-      order.PhoneNumber=$scope.curUser.Phone;
-      order.Address=$scope.curUser.Address;
-      order.Note= $scope.rootNote.Note
-      order.OrderDate = new Date();
-      order.ItemChange=false;
-      OrderService.addOrder(order)
+    CartService.getCartByUserId($scope.curUser._id)
       .then(function success(data){
-          sharedUtils.showAlert("success","Cảm ơn bạn đã mua hàng, nhân viên của Ugao sẽ gọi trong ít phút tới để xác nhận đơn hàng!");
-          CartService.cartOrdered();
-          CartService.updateCart();
-          $scope.curUser.DayRemain = $scope.curUser.DayUse;
-          UserService.updateUser($scope.curUser);
-          // Navigation to Order details
-          $state.go('orderDetail',{id: data._id});
-      }, function error(msg){
-          sharedUtils.showAlert("warning",msg.error);
-      });
+          if(data.ItemChange){   
+            var myPopup = $ionicPopup.show({
+              scope: $scope,
+              title: 'Nhắc Nhở',
+              template: 'Một số sản phẩm trong giỏ hàng đã thay đổi thông tin, bạn vui lòng kiểm tra lại trước khi đặt hàng nhé. Xin cảm ơn',
+              buttons: [
+              {
+                text: '<b>Đóng</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                  sharedUtils.showLoading();
+                   data.ItemChange=false;
+                   CartService.setCurCart(data);
+                   CartService.updateCart();
+                   sharedUtils.hideLoading();
+                   $scope.Init();
+                   
+                }
+              }
+              ]
+            });
+          }
+          else{
+            sharedUtils.showLoading();
+            var order ={};
+            order.OwnerId=$scope.curUser._id;
+            order.OrderDetails=$scope.curCart.OrderDetails;
+            order.Total=$scope.curCart.Total;
+            order.Status=1;
+            order.Name=$scope.curUser.FullName;
+            order.PhoneNumber=$scope.curUser.Phone;
+            order.Address=$scope.curUser.Address;
+            order.Note= $scope.rootNote.Note
+            order.OrderDate = new Date();
+            order.ItemChange=false;
+            OrderService.addOrder(order)
+            .then(function success(data){
+                sharedUtils.showAlert("success","Cảm ơn bạn đã mua hàng, nhân viên của Ugao sẽ gọi trong ít phút tới để xác nhận đơn hàng!");
+                CartService.cartOrdered();
+                CartService.updateCart();
+                $scope.curUser.DayRemain = $scope.curUser.DayUse;
+                UserService.updateUser($scope.curUser);
+                sharedUtils.hideLoading();
+                // Navigation to Order details
+                $state.go('orderDetail',{id: data._id});
+            }, function error(msg){
+                sharedUtils.hideLoading();
+                sharedUtils.showAlert("warning",msg.error);
+            });
+          }
+          
+        }, function error(msg){
+          sharedUtils.hideLoading();
+          sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
+        });
+        
   };
   $scope.AddToCart=function(item){
     var myPopup = $ionicPopup.show({

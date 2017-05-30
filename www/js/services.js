@@ -86,6 +86,7 @@ angular.module('app.services', [])
         return self.cart;
     },
     'setCurCart': function(cart){ 
+        console.log(cart);
         self.cart=cart;
     },
     'addItemCurCart': function(item, kilogramType,numOfBag){ 
@@ -134,13 +135,16 @@ angular.module('app.services', [])
         self.cart.Total = temp;
     },
     'updateCart': function(){ // Hàm cập nhật thông tin user
+        
         var d = $q.defer();
         $http.put(hostURL +"carts/"+self.cart._id,self.cart,{headers: headers})
         .success(function(data){
           d.resolve("success");
+          console.log(data);
         })
         .error(function(msg){
             d.reject("error");
+            console.log(msg);
         });
         return d.promise;
     },
