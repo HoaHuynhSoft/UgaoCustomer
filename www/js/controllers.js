@@ -316,7 +316,7 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('indexCtrl', function($window,$scope,$window,UserService,$rootScope,sharedUtils,$ionicHistory,$state,$ionicSideMenuDelegate) {
+.controller('indexCtrl', function($window,$scope,UserService,$rootScope,sharedUtils,$ionicHistory,$state,$ionicSideMenuDelegate) {
     $scope.logout=function(){
       $ionicSideMenuDelegate.toggleLeft(); //To close the side bar
         $ionicSideMenuDelegate.canDragContent(false);  // To remove the sidemenu white space
@@ -333,8 +333,6 @@ angular.module('app.controllers', [])
   })
 
 .controller('myCartCtrl', function($filter,$scope,$rootScope,$state,CartService,ItemService,UserService,$ionicPopup,OrderService,sharedUtils ) {
-  $scope.search={};
-  $scope.Products=[];
   $scope.curUser = {};
   $scope.rootNote = {};
   $scope.headerInfo = true;
@@ -445,13 +443,13 @@ angular.module('app.controllers', [])
   };
   $scope.numBagChange=function(detail){
 
-    if (detail.numOfKilogramType <0) detail.numOfKilogramType =0
+    if (detail.numOfKilogramType <0) detail.numOfKilogramType =0;
     else if(detail.numOfKilogramType ==0)
         $scope.removeFromCart(detail);
     else{
       var temp =0;
       $scope.curCart.OrderDetails.forEach(function(detail,index){
-        temp += detail.Item.price*detail.kilogramType*detail.numOfKilogramType;;
+        temp += detail.Item.price*detail.kilogramType*detail.numOfKilogramType;
       });
       $scope.curCart.Total = temp;
       CartService.setCurCart($scope.curCart);
@@ -527,71 +525,7 @@ angular.module('app.controllers', [])
         });
         
   };
-  $scope.AddToCart=function(item){
-    var myPopup = $ionicPopup.show({
-      scope: $scope,
-      title: 'Bạn muốn mua bao nhiêu kilogram?',
-      templateUrl:'templates/buyDetail.html',
-      //template:'<ion-radio ng-repeat="item in clientSideList" ng-value="item.value" ng-click="getKilo(item)" ng-model="data"> {{ item.text }} </ion-radio>',
-      buttons: [
-        { text: 'Đóng' },
-      {
-        text: '<b>Đặt</b>',
-        type: 'button-positive',
-        onTap: function(e) {
-          console.log($scope.weight+$scope.data.numOfBag);
-          $scope.updateCurCartService(item,$scope.weight,parseInt($scope.data.numOfBag));
-          
-        }
-      }
-      ]
-    });
-  };
-  $scope.updateCurCartService=function(item,kilogramType,numofbag){
-      CartService.addItemCurCart(item,kilogramType,numofbag);
-      CartService.updateCart()
-      .then(function success(data){
-          $rootScope.numCartItems = CartService.getCurCart().OrderDetails.length;
-          sharedUtils.showAlert("success","Đã bỏ vào giỏ hàng");
-          $scope.curCart=CartService.getCurCart();
-          console.log($scope.curCart);
-      }, function error(msg){
-        //CartService.removeDetailFromCartByItem(item);
-        sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
-      });
-  };
-  $scope.decreaseNumofBag=function(){
-    if($scope.data.numOfBag>1){
-      $scope.data.numOfBag--;
-    }
-  }
-  $scope.increaseNumofBag=function(){
-    if($scope.data.numOfBag<10){
-      $scope.data.numOfBag++;
-    }
-  }
-  $scope.itemClick=function (item) {
-    $scope.curItemClick=item;
-    var myPopup = $ionicPopup.show({
-      templateUrl: 'templates/itemDetail.html',
-      scope: $scope,
-      title: 'Thông tin chi tiết',
-      buttons: [
-      { text: 'Đóng' },
-      {
-        text: '<b>Đặt</b>',
-        type: 'button-positive',
-        onTap: function(e) {
-          $scope.orderNow(item);
-          //$state.go('myCart');
-        }
-      }
-      ]
-    });
-  };
-  $scope.getKilo=function(item){
-    $scope.weight=item.value;
-  };
+
   $scope.ShowProductsInCart=function(){
     if ( $scope.showProducts == false){
             $scope.showProducts = true;
@@ -600,10 +534,7 @@ angular.module('app.controllers', [])
           $scope.showProducts = false;
     } 
   }
-  $scope.searchChange = function(){
-      console.log($scope.search.filterOrder);
-      $scope.items=$filter('filter')( $scope.Products,$scope.search.filterOrder);
-  }
+
 })
 
 .controller('ordersCtrl', function($scope,$state,$filter,$rootScope,sharedUtils,OrderService,UserService) {

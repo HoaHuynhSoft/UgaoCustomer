@@ -47,79 +47,90 @@
             <i class="icon" ng-class="{'ion-ios-arrow-right':showProducts,'ion-ios-arrow-down':!showProducts}"></i>
            Giỏ Hàng ({{$root.numCartItems}} Sản phẩm)
           </div>
-          <div class="scrollhoriz" ng-show="!showProducts">
-          <div class="item item-body"  ng-repeat="detail in curCart.OrderDetails track by $index" style="margin-top:5px; margin-bottom: 5px; padding-bottom: 0px; border-width: 0px;">
-            <div class= "row">
-                <div class= "col col-40">
-                  <img ng-src="{{'img/'+ detail.Item.image+'.jpg'}}" width="80%" height="auto" style="box-shadow: none;">
-                </div>
-                <div class= "col" >
-                  <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 10px;">Tên:<strong> {{detail.Item.name}}</strong></p>
-                  <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Giá: <strong>{{detail.Item.price| currency:"":0}}đ/Kg</strong></strong></p>
-                  <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Loại bao: <strong>{{detail.kilogramType}} Kg</strong></p>
-                  <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Số bao: <strong>{{detail.numOfKilogramType}} Bao</strong></p>
-                </div>
-						</div>
-            <div class="button-bar" style="box-shadow: none;">
-                <button ng-click="removeFromCart(detail)" class="button button-dark button-block button-small icon ion-android-delete" ></button>
-            </div>
+            <div class="scrollhoriz" ng-show="!showProducts">
+              <div class="item item-body"  ng-repeat="detail in curCart.OrderDetails" style="margin-top:5px; margin-bottom: 5px; padding-bottom: 0px; border-width: 0px;">
+                  <div class= "row">
+                      <div class= "col col-40">
+                        <img ng-src="{{'img/'+ detail.Item.image+'.jpg'}}" width="80%" height="auto" style="box-shadow: none;">
+                      </div>
+                      <div class= "col" >
+                        <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 10px;">Tên:<strong> {{detail.Item.name}}</strong></p>
+                        <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Giá: <strong>{{detail.Item.price| currency:"":0}}đ/Kg</strong></p>
+                        <p style="color: gray; font-size: 12px;margin-bottom: 0px;margin-top: 0px;">Loại bao: <strong>{{detail.kilogramType}} Kg</strong></p>
+                      </div>
+                  </div>
+                  <div class="row text-center" style="margin-top: -20px;" >
+                     <div class= "col col-40">
+                      </div>
+                      <div class="col" style="margin-bottom: 0px;margin-top: 0px;">
+                          <input style="color: dimgray; font-size: 12px; width: 70px;padding-bottom: 0px !important;padding-top: 0px !important;background: transparent;"  disabled="disabled" type="text" value="SL Bao:">
+                      </div>
+                      <div class="col" style="margin-bottom: 0px;margin-top: 0px;">
+                          <input style="color: dimgray; font-size: 12px;padding-bottom: 0px !important;padding-top: 0px !important; width:50px;text-align: center;" type="number" ng-model="detail.numOfKilogramType" ng-change="numBagChange(detail)">
+                      </div>
+                      <div class="col" style="margin-bottom: 0px;margin-top: 0px;">
+                          <input style="color: dimgray; font-size: 12px;padding-bottom: 0px !important;padding-top: 0px !important;background: transparent;width:30px" type="text" value=" Bao" disabled="disabled">
+                      </div>            
+                  </div>
+                  <div class="button-bar" style="box-shadow: none;">
+                      <button ng-click="removeFromCart(detail)" class="button button-dark button-block button-small icon ion-android-delete" ></button>
+                  </div>
+              </div>
+            </div>  
           </div>
-          </div>
-          </div>
+
           
-          <div class="card" style="box-shadow: 1 0px 0px 0 rgba(0,0,0,.26);">
-            <div class="item item-divider item-icon-right" style="border-color: transparent;background-color: #ef473a; color: #fff;" ng-click = "headerAddProductClick()">
+          
+        <div class="card" style="box-shadow: 1 0px 0px 0 rgba(0,0,0,.26);">
+            <div class="item item-divider item-icon-right" style="border-color: transparent;background-color: #ef473a; color: #fff;" ui-sref="home">
             <i class="icon" ng-class="{'ion-ios-arrow-right':headerAddProduct,'ion-ios-arrow-down':!headerAddProduct}"></i>
-            Thêm sản phẩm
-            
-          </div>
+              Thêm sản phẩm      
+            </div>
             <!--<button class="button button-block icon-right ion-chevron-right button-calm button-assertive" style="margin-top: 0px; margin-bottom: 0px;" ng-click = "headerAddProductClick()">
               ssss
-            </button>-->
+            </button>-->   
+            <!--<div ng-show="!headerAddProduct">
+              <label class="item item-input" style="background-color: aliceblue;">
+                  <i class="icon ion-search placeholder-icon"></i>
+                  <input type="text" ng-model="search.filterOrder" ng-change="searchChange()" placeholder="Tìm theo tên sản phẩm" >
+              </label>
+              <div class="scrollhoriz">
+              <div class="row" ng-repeat="item in items track by $index " ng-if="$index % 2 === 0">
+
+
+                <div class="col-50" ng-if="$index < items.length" style="border-bottom: 3px solid #886aea;margin-left: -5px;padding: 5px;"  >
+
+                    <div  style="border-width: 0px; border-style: none; display: flex;align-items: center;justify-content: center;height: 150px!important;max-width:100%!important;">
+                      <img ng-src="{{'img/'+ items[$index].image +'.jpg'}}" style="height: 100%; width: auto; box-shadow: 0 0px 0px 0 rgba(0,0,0,.26);" ng-click = "itemClick(items[$index])"/>
+                    </div>
+                    <div style="padding-left: 5px;">
+                      <p style="width: 120px;color: black;font-weight: bold; font-size: 16px; margin-bottom:0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">{{items[$index].name}}</p>
+                      <p style="color: dimgray; font-size: 12px;margin-bottom:0px;">Giá: <strong>{{items[$index].price| currency:"":0}}đ/1kg</strong></p>
+                      
+                    </div>
+                    <div class="button-bar">
+                      <button class="button button-outline button-small button-balanced" style="font-size:12px; padding-right:5px;padding-left:5px;" ng-click = "AddToCart(items[$index])">Thêm vào đơn hàng</button>
+                    </div>
+                </div>
+
+                <div class="col-50 " ng-if="$index+1  < items.length" style="border-bottom: 3px solid #886aea; margin-left: 10px; padding: 5px;" >
+                    <div class="item item-image" style="border-width: 0px; border-style: none;display: flex;align-items: center;justify-content: center;height: 150px!important;width: 100%!important;">
+                      <img ng-src="{{'img/'+ items[$index+1].image +'.jpg'}}" style="height: 100%; width: auto;box-shadow: 0 0px 0px 0 rgba(0,0,0,.26);" ng-click = "itemClick(items[$index+1])"/>
+                    </div>
+                    <div style="padding-left: 5px;">
+                      <p style="width: 120px;color: black;font-weight: bold; font-size: 16px; margin-bottom:0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">{{items[$index+1].name}}</p>
+                      <p style="color: dimgray; font-size: 12px;margin-bottom:0px;">Giá: <strong>{{items[$index+1].price| currency:"":0}}đ/1kg</strong></p>
+                      <p style="color: dimgray; font-size: 12px">Gas + Vỏ: <strong>{{items[$index+1].priceFull| currency:"":0}}đ</strong></p>
+                    </div>
+                    <div class="button-bar">
+                      <button class="button button-outline button-small button-balanced" style="font-size:12px; padding-right:5px;padding-left:5px;" ng-click = "AddToCart(items[$index+1])">Thêm vào đơn hàng</button>   
+                    </div>
+                </div>
+              </div>
+              </div>
             
-          <div   ng-show="!headerAddProduct">
-            <label class="item item-input" style="background-color: aliceblue;">
-                <i class="icon ion-search placeholder-icon"></i>
-                <input type="text" ng-model="search.filterOrder" ng-change="searchChange()" placeholder="Tìm theo tên sản phẩm" >
-            </label>
-            <div class="scrollhoriz">
-            <div class="row" ng-repeat="item in items track by $index " ng-if="$index % 2 === 0">
-
-
-              <div class="col-50" ng-if="$index < items.length" style="border-bottom: 3px solid #886aea;margin-left: -5px;padding: 5px;"  >
-
-                  <div  style="border-width: 0px; border-style: none; display: flex;align-items: center;justify-content: center;height: 150px!important;max-width:100%!important;">
-                    <img ng-src="{{'img/'+ items[$index].image +'.jpg'}}" style="height: 100%; width: auto; box-shadow: 0 0px 0px 0 rgba(0,0,0,.26);" ng-click = "itemClick(items[$index])"/>
-                  </div>
-                  <div style="padding-left: 5px;">
-                    <p style="width: 120px;color: black;font-weight: bold; font-size: 16px; margin-bottom:0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">{{items[$index].name}}</p>
-                    <p style="color: dimgray; font-size: 12px;margin-bottom:0px;">Giá: <strong>{{items[$index].price| currency:"":0}}đ/1kg</strong></p>
-                    
-                  </div>
-                  <div class="button-bar">
-                    <button class="button button-outline button-small button-balanced" style="font-size:12px; padding-right:5px;padding-left:5px;" ng-click = "AddToCart(items[$index])">Thêm vào đơn hàng</button>
-                  </div>
-              </div>
-
-              <div class="col-50 " ng-if="$index+1  < items.length" style="border-bottom: 3px solid #886aea; margin-left: 10px; padding: 5px;" >
-                  <div class="item item-image" style="border-width: 0px; border-style: none;display: flex;align-items: center;justify-content: center;height: 150px!important;width: 100%!important;">
-                    <img ng-src="{{'img/'+ items[$index+1].image +'.jpg'}}" style="height: 100%; width: auto;box-shadow: 0 0px 0px 0 rgba(0,0,0,.26);" ng-click = "itemClick(items[$index+1])"/>
-                  </div>
-                  <div style="padding-left: 5px;">
-                    <p style="width: 120px;color: black;font-weight: bold; font-size: 16px; margin-bottom:0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">{{items[$index+1].name}}</p>
-                    <p style="color: dimgray; font-size: 12px;margin-bottom:0px;">Giá: <strong>{{items[$index+1].price| currency:"":0}}đ/1kg</strong></p>
-                    <!--<p style="color: dimgray; font-size: 12px">Gas + Vỏ: <strong>{{items[$index+1].priceFull| currency:"":0}}đ</strong></p>-->
-                  </div>
-                  <div class="button-bar">
-                    <button class="button button-outline button-small button-balanced" style="font-size:12px; padding-right:5px;padding-left:5px;" ng-click = "AddToCart(items[$index+1])">Thêm vào đơn hàng</button>   
-                  </div>
-              </div>
-            </div>
-            </div>
-        	
+            </div>-->
         </div>
-        </div>
-     </div>
     </ion-content>
       
 </ion-view>
