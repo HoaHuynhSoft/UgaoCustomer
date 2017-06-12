@@ -49,7 +49,7 @@ angular.module('app.services', [])
   };
   return self;
 })
-.factory("ItemService", function($http,$q){ // Service cho post
+.factory("ItemService", function($http,$q,CartService){ // Service cho post
     
   var self = {  // tạo một đối tượng service, chứa các hàm và biến
     'items' : [], // chứa posts lấy về
@@ -74,7 +74,19 @@ angular.module('app.services', [])
             d.reject("error");
         });
         return d.promise;
+    },
+    'checkItemInCard':function(items){
+        var curCard=CartService.getCurCart();
+        items.forEach(function(item,indexScopeFather){
+            curCard.OrderDetails.forEach(function(itemInCard,indexScopeChildren){
+                if(item._id==itemInCard.Item._id){
+                    item.IsInCard=true;
+                }
+            })
+        })
+        return items;
     }
+
   };
   return self;
 })
@@ -134,8 +146,7 @@ angular.module('app.services', [])
         });
         self.cart.Total = temp;
     },
-    'updateCart': function(){ // Hàm cập nhật thông tin user
-        
+    'updateCart': function(){ // Hàm cập nhật thông tin user        
         var d = $q.defer();
         $http.put(hostURL +"carts/"+self.cart._id,self.cart,{headers: headers})
         .success(function(data){

@@ -101,7 +101,7 @@ angular.module('app.controllers', [])
           console.log("dang ki " + data);
           if (data === null)
           {
-            UserService.addUser($scope.user) // lấy user bằng user name
+            UserService.addUser($scope.user) 
             .then(function success(data){
               sharedUtils.showAlert("success","Tạo thành công, vui lòng đăng nhập để tiếp tục");
             }, function error(msg){
@@ -118,7 +118,7 @@ angular.module('app.controllers', [])
 
   })
 .controller('homeCtrl', function($scope,ItemService,$filter,CartService,$rootScope,$ionicSideMenuDelegate,$state,$ionicHistory,sharedUtils,$ionicPopup) {
-    $scope.slideChanged = function(index) {
+  $scope.slideChanged = function(index) {
     $scope.slideIndex = index;
   };
   $scope.weight=10; 
@@ -135,25 +135,31 @@ angular.module('app.controllers', [])
   $rootScope.extras=true;
   $scope.search={};
   $scope.Products=[];
-  $scope.curItemClick= {}
+  $scope.curItemClick= {};
   $scope.$on('$ionicView.enter', function(ev) {
-    $ionicSideMenuDelegate.canDragContent(true);
-    $rootScope.extras=true;
-    if(ev.targetScope !== $scope){
-      $ionicHistory.clearHistory();
-      $ionicHistory.clearCache();
-    }
+      $ionicSideMenuDelegate.canDragContent(true);
+      $rootScope.extras=true;
+      if(ev.targetScope !== $scope){
+        $ionicHistory.clearHistory();
+        $ionicHistory.clearCache();
+      }
+    $scope.Init();
+  });
+  $scope.Init=function(){
+    console.log("init");
     sharedUtils.showLoading();
     ItemService.getAllItems()
     .then(function success(data){
-        $scope.Products=data;
-        $scope.items=data;
+        
+        $scope.Products=ItemService.checkItemInCard(data);
+        console.log($scope.Products);
+        $scope.items= $scope.Products
         sharedUtils.hideLoading();
     }, function error(msg){
       sharedUtils.hideLoading();
       console.log(msg);
     });
-  });
+  }
   $scope.searchChange = function(){
     console.log($scope.search.filterOrder);
     $scope.items=$filter('filter')(  $scope.Products,$scope.search.filterOrder);
@@ -193,6 +199,7 @@ angular.module('app.controllers', [])
       .then(function success(data){
           $rootScope.numCartItems = CartService.getCurCart().OrderDetails.length;
           sharedUtils.showAlert("success","Đã bỏ vào giỏ hàng");
+          $scope.Init();
       }, function error(msg){
         //CartService.removeDetailFromCartByItem(item);
         sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");

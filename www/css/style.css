@@ -500,4 +500,21 @@ height: 280px;
 }
 .popup-container .popup {
     width: 85%;
-    }
+}
+.tick{
+    position: absolute;
+    top: 0px;
+    font-size: 25px!important;
+    right: 5px;
+    color: green !important;
+}
+.product_Card{
+    border-width: 0px;
+     border-style: none;
+     display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 150px!important;
+      position: relative;
+}
