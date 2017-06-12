@@ -4,8 +4,8 @@
 <div class= "col " style="margin-bottom: 0px;margin-top: 0px;">
     <input style="color: dimgray; font-size: 12px;width: 100px; padding-bottom: 0px;padding-top: 0px;background: transparent;" type="text" value="SL bao đặt:  {{data.numOfBag}}" disabled="disabled">
 </div>
-<div class="item range">
+<div class="item input_customed">
   <i class="icon ion-ios-minus-outline" ng-click="decreaseNumofBag()"></i>
-  <input min=1 max=10 value="{{data.numOfBag}}" ng-model="data.numOfBag" type="range" name="numOfBags">
+  <input class="slInput" ng-model="data.numOfBag" type="number" name="numOfBags">
   <i class="icon ion-ios-plus-outline" ng-click="increaseNumofBag()"></i>
 </div>

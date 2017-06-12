@@ -208,7 +208,7 @@ angular.module('app.controllers', [])
   $scope.orderNow=function(item){
     var myPopup = $ionicPopup.show({
       scope: $scope,
-      title: 'Bạn muốn mua bao nhiêu kilogram?',
+      title: "Bạn muốn mua bao nhiêu Kg "+ item.name+"?",
       templateUrl:'templates/buyDetail.html',
       //template:'<ion-radio ng-repeat="item in clientSideList" ng-value="item.value" ng-click="getKilo(item)" ng-model="data"> {{ item.text }} </ion-radio>',
       buttons: [
@@ -230,7 +230,7 @@ angular.module('app.controllers', [])
   $scope.pushToCart=function(item){
     var myPopup = $ionicPopup.alert({
       scope: $scope,
-      title: 'Bạn muốn mua bao nhiêu kilogram?',
+      title: "Bạn muốn mua bao nhiêu Kg "+ item.name+"?",
       templateUrl:'templates/buyDetail.html',
       //template:'<ion-radio ng-repeat="item in clientSideList" ng-value="item.value" ng-click="getKilo(item)" ng-model="data"> {{ item.text }} </ion-radio>',   
       buttons: [
