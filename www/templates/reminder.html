@@ -1,32 +1,32 @@
-<ion-view style="" class=" " id="page10" title="Trang nhắc nhở">
+<ion-view style="" class=" " id="page10" title="Trang nhắc gạo">
     <ion-content class="has-header" padding="true" ng-class="outOfStockNor">
       <div class="row">
           <div class="reminderContainer">
-                <p>Bạn còn khoảng</p>
+
                 <div class="row">
-                    <div class="col">
-                        <p class="number" ng-class="estimateLevel">{{monthNo| number:0}}</p><br/><br/>
+                    <div class="col text-center">
+                        <p class="number" ng-class="estimateLevel" style="font-weight: 300;">0{{monthNo| number:0}}</p><br/><br/>
                         <p class="numberLabel">Tháng</p>
                     </div>
-                    <div class="col">
-                        <p class="number" ng-class="estimateLevel">{{dayNo| number:0}}</p><br/><br/>
+                    <div class="col text-center">
+                        <p class="number" ng-class="estimateLevel" style="font-weight: 300;">{{dayNo| number:0}}</p><br/><br/>
                         <p class="numberLabel">Ngày</p>
                     </div>
                 </div>
-                <p style = "margin:20px;">Là hết Gạo!</p>
+                <p style = "margin:20px;" style="color: #e5c7ff;">Số ngày sử dụng gạo ước tính còn lại</p>
           
           </div>
       </div>
       <div class="row" >
-        <div class="col text-center">
-            <button class="button button-outline circlebtn" ng-click="order()" >
-                <div ng-class="estimateLevel">Đặt</div>
+        <div class="col text-center" style="margin-top: 50px;"> 
+            <button class="button button-outline circlebtn" ng-click="order()" style="word-break: break-word; white-space: normal; font-weight: 300; font-size: 20px;" >
+                <div ng-class="estimateLevel">Đặt ngay</div>
             </button>
         </div>            
     </div>
       <div class="row" style= "position: absolute;bottom: 0;left: 0;" >
-          <button class="button button-full button-outline button-light" style="float: right; font-size:20px; color:aliceblue;" ui-sref="myCart">
-                  Chi tiết hơn          >
+          <button class="button button-full button-outline button-light" style="float: right; color:aliceblue; border-color: #ef8dff; font-weight: 300; font-size: 16px;" ui-sref="myCart">
+                  Chi tiết hơn>
           </button>
       </div>
     </ion-content>

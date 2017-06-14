@@ -46,7 +46,7 @@
     display: inline-block;
     color: white;
     margin-left: 25px;
-    font-size: 60px;
+    font-size: 70px;
 }
 .reminderContainer .row .col .numberLabel {
    text-align:left;margin:0 auto;
@@ -490,8 +490,8 @@ margin-top:10px;
   .inUsing{
      
   background: #886aea; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to bottom, #886aea, #66ff00); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to bottom, #886aea, #66ff00);
+  background: -webkit-linear-gradient(to bottom, #886aea, #a314d2); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #886aea, #a314d2);
   }
   .scrollhoriz {
 height: 250px;
