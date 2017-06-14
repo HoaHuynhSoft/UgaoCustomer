@@ -494,10 +494,45 @@ margin-top:10px;
   background: linear-gradient(to bottom, #886aea, #a314d2);
   }
   .scrollhoriz {
-height: 250px;
+height: 280px;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
 }
 .popup-container .popup {
     width: 85%;
-    }
+}
+.tick{
+    position: absolute;
+    top: 0px;
+    font-size: 25px!important;
+    right: 5px;
+    color: green !important;
+}
+.product_Card{
+    border-width: 0px;
+     border-style: none;
+     display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 150px!important;
+      position: relative;
+}
+.input_customed{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    padding: 2px 11px;
+}
+.slInput{
+    margin-left: 5px;
+    text-align: center;
+}

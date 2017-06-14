@@ -1,15 +1,13 @@
-<ion-view style="" class=" " id="page7" title="Trang chủ">
+<ion-view style="" class=" " id="page7" title="Danh mục gạo">
     <ion-content class="has-header" padding="false"    >
 		<label class="item item-input" style="background-color: aliceblue;">
 				<i class="icon ion-search placeholder-icon"></i>
 				<input type="text" ng-model="search.filterOrder" ng-change="searchChange()" placeholder="Tìm theo tên sản phẩm" >
    	</label>
 		<div class="row" ng-repeat="item in items track by $index " ng-if="$index % 2 === 0">
-
-
-			<div class="col col-45" ng-if="$index < items.length" style="border-bottom: 3px solid #886aea;"  >
-
-				  <div  style="border-width: 0px; border-style: none;display: block; display: flex;align-items: center;justify-content: center;height: 150px!important;">
+			<div class="col col-45" ng-if="$index < items.length" style="border-bottom: 3px solid #886aea;"  >				
+				  <div class="product_Card">
+						<p ng-if="items[$index].IsInCard" class="tick">&#10004</p>
 						<img ng-src="{{'img/'+ items[$index].image +'.jpg'}}" style="height: 100%; width: auto; max-width: 100%;" ng-click = "itemClick(items[$index])"/>
 				  </div>
 					<div class="text-center">
@@ -24,12 +22,13 @@
 			</div>
 
 			<div class="col col-45 col-offset-10" ng-if="$index+1  < items.length" style="border-bottom: 3px solid #886aea;" >
-				  <div class="item item-image" style="border-width: 0px; border-style: none;display: block; display: flex;align-items: center;justify-content: center;height: 150px!important;">
-					<img ng-src="{{'img/'+ items[$index+1].image +'.jpg'}}" style="height: 100%; width: auto;max-width: 100%;" ng-click = "itemClick(items[$index+1])"/>
+				  <div class="item item-image product_Card">
+						<p ng-if="items[$index+1].IsInCard" class="tick">&#10004</p>
+						<img ng-src="{{'img/'+ items[$index+1].image +'.jpg'}}" style="height: 100%; width: auto;max-width: 100%;" ng-click = "itemClick(items[$index+1])"/>
 				  </div>
 					<div class="text-center">
 						<p style="color: black;font-weight: bold; font-size: 16px; margin-bottom:0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">{{items[$index+1].name}}</p>
-						<p style="color: dimgray; font-size: 12px;margin-bottom:0px;">Giá: <strong>{{items[$index].price| currency:"":0}}đ/1kg</strong></p>
+						<p style="color: dimgray; font-size: 12px;margin-bottom:0px;">Giá: <strong>{{items[$index+1].price| currency:"":0}}đ/1kg</strong></p>
 						<!--<p style="color: dimgray; font-size: 12px">Gas + Vỏ: <strong>{{items[$index+1].priceFull| currency:"":0}}đ</strong></p>-->
 					</div>
 					<div class="button-bar">
@@ -38,10 +37,6 @@
 					</div>
 			</div>
 		</div>
-		<div class="row"> <div style="height: 100px;"></div></div>
-						  
+		<div class="row"> <div style="height: 100px;"></div></div>					  
 	</ion-content>
-	<!--<div id="floating-button" data-toggle="tooltip" data-placement="left" ui-sref="myCart">
-							<p class="plus">Đặt</p>
-						</div>-->
 </ion-view>
