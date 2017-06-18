@@ -39,17 +39,25 @@ angular.module('app.controllers', [])
     }
 
     $scope.login = function(user) {
-      if (user.UserName == null || user.Pass == null) return;
+      if (user.UserName == null || user.Pass == null){
+        sharedUtils.showAlert("warning","Vui lòng nhập thông tin tài khoản!");
+        return;
+      }
       if (!(user.UserName)||!(user.Pass)){
         sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
         return;
       }
         UserService.getUser({UserName:user.UserName}) // lấy user bằng user name
         .then(function success(data){
-            if((user.UserName.toLowerCase() == data.UserName.toLowerCase()) && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
+            if(data==null){
+              sharedUtils.showAlert("warning","Tài khoản không tồn tại!");
+              return;
+            }
+            if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase()) 
+                && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
               $window.localStorage['username'] = user.UserName;
               $window.localStorage['pass'] = user.Pass;
-              
+              $rootScope.userName =data.FullName;
               CartService.getCartByUserId( UserService.getCurUser()._id)
               .then(function success(cart){
                   console.log("cur cart"+ JSON.stringify(cart));
@@ -69,10 +77,12 @@ angular.module('app.controllers', [])
                   $rootScope.extras = true;
                   sharedUtils.hideLoading();
                     
-                  if(data.isActive)
+                  if(data.isActive){
                     $state.go('reminder', {}, {location: "replace"});
-                  else
-                  $state.go('home', {}, {location: "replace"});
+                  }                   
+                  else{
+                    $state.go('home', {}, {location: "replace"});
+                  }
                   $scope.user = {};
               }, function error(msg){
                 sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
@@ -82,7 +92,7 @@ angular.module('app.controllers', [])
              
             }
               else{
-                sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
+                sharedUtils.showAlert("warning","Mật khẩu tài khoản không đúng");
               }
         }, function error(msg){
           sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
@@ -92,7 +102,7 @@ angular.module('app.controllers', [])
 
 
 })
-.controller('signupCtrl', function($scope,$rootScope,sharedUtils,$ionicSideMenuDelegate,$state, UserService) {
+.controller('signupCtrl', function($timeout,$scope,$rootScope,sharedUtils,$ionicSideMenuDelegate,$state, UserService) {
     $rootScope.extras = false; // For hiding the side bar and nav icon
     $scope.user = {};
     $scope.signupEmail = function () {
@@ -104,12 +114,15 @@ angular.module('app.controllers', [])
             UserService.addUser($scope.user) 
             .then(function success(data){
               sharedUtils.showAlert("success","Tạo thành công, vui lòng đăng nhập để tiếp tục");
+               $timeout(function () {
+                  $state.go('tabLogin.login');
+              }, 2000);
             }, function error(msg){
                sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
             });  
           }
           else
-          sharedUtils.showAlert("warning","Đã tồn tại username này rồi");
+          sharedUtils.showAlert("warning","Tên đăng nhập đã tồn tại.");
         }, function error(msg){
           sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
         });  
