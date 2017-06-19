@@ -39,13 +39,14 @@ angular.module('app.controllers', [])
     }
 
     $scope.login = function(user) {
-      if (user.UserName == null || user.Pass == null) return;
       if (!(user.UserName)||!(user.Pass)){
-        sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
+        sharedUtils.showAlert("warning","Vui lòng nhập tài khoản và mật khẩu!");
         return;
       }
+      console.log(user);
         UserService.getUser({UserName:user.UserName}) // lấy user bằng user name
         .then(function success(data){
+          console.log(JSON.stringify(data));
             if((user.UserName.toLowerCase() == data.UserName.toLowerCase()) && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
               $window.localStorage['username'] = user.UserName;
               $window.localStorage['pass'] = user.Pass;
@@ -58,7 +59,7 @@ angular.module('app.controllers', [])
                     .then(function success(newcart){
                       $rootScope.numCartItems = 0;
                     }, function error(msg){
-                      sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");;
+                      sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
                     });
                   }
                   $rootScope.numCartItems=cart===null? 0 : cart.OrderDetails.length;
@@ -679,7 +680,7 @@ angular.module('app.controllers', [])
               $scope.curUser.Pass = $scope.passData.passNew;
               UserService.updateUser($scope.curUser)
               .then(function success(data){
-                sharedUtils.showAlert("warning","Đổi pass thành công");
+                sharedUtils.showAlert("success","Đổi pass thành công");
               }, function error(msg){
                 sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
               });
@@ -712,7 +713,7 @@ angular.module('app.controllers', [])
               $scope.curUser.DayRemain = $scope.estimateData.DayRemain;
                 UserService.updateUser($scope.curUser)
                 .then(function success(data){
-                  sharedUtils.showAlert("warning","Đổi pass thành công");
+                  sharedUtils.showAlert("success","Đổi thành công");
                 }, function error(msg){
                   sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
                 });
@@ -760,8 +761,33 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('supportCtrl', function($scope,$rootScope) {
+.controller('supportCtrl', function($scope,$rootScope, UserService,sharedUtils) {
     $rootScope.extras=true;
+    $scope.feedback = {
+      catalogue: 4,
+      contain: "",
+      dateCreate:  new Date(),
+      isDeleteFlag: false,
+      isRead: false
+    }
+    $scope.sendFeedback = function(){
+       
+      if($scope.feedback.contain == "")
+         sharedUtils.showAlert("warning","Bạn chưa nhập nội dung kìa");
+      else
+      {
+        $scope.feedback.userId = UserService.curUser._id;
+        $scope.feedback.userName = UserService.curUser.UserName;
+        console.log(  $scope.feedback);
+        UserService.addFeedback($scope.feedback)
+        sharedUtils.showAlert("success","Gửi phản hồi thành công, cảm ơn bạn");
+        $scope.feedback = {
+        catalogue: 1,
+        contain: ""
+      }
+     
+    }
+    }
 })
 
 .controller('forgotPasswordCtrl', function($scope,$rootScope) {

@@ -1,6 +1,30 @@
-<ion-view view-title="Hỗ trợ">
+<ion-view view-title="Phản hồi & Hỗ trợ">
   <ion-content>
     <ion-list>
+        <div class="feedbackContainer">
+          <div class="feedbackHeader">
+            <div class="row">
+              <div class="col col-25">
+                <p style=" position: relative;top: 10%;">Danh mục: </p>
+              </div>
+               <div class="col col-30">
+                <select style=" position: relative;top: 10%;" ng-model="feedback.catalogue">
+                  <option value ="1">Phục vụ</option>
+                  <option value ="2">Đặt hàng</option>
+                  <option value ="3">Sản phẩm</option>
+                  <option value ="4" ng-selected="true">Khác</option>
+                </select>
+              </div>
+              <div class="col">
+                <button class="button button-calm" style="float: right;" ng-click="sendFeedback()">Gửi</button>
+              </div>
+            </div>
+            
+          </div>
+          <div class="feedbackContain" >
+            <textarea placeholder="Nội dung feedback" rows="8" ng-model="feedback.contain" style="padding:10px"  ></textarea>
+          </div>
+        </div>
         <div class="item item-divider item-icon-right">
           Tổng đài hỗ trợ đặt Gas
         </div>
