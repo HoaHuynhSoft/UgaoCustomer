@@ -39,61 +39,66 @@ angular.module('app.controllers', [])
     }
 
     $scope.login = function(user) {
+
       if (!(user.UserName)||!(user.Pass)){
         sharedUtils.showAlert("warning","Vui lòng nhập tài khoản và mật khẩu!");
         return;
       }
-      console.log(user);
-        UserService.getUser({UserName:user.UserName}) // lấy user bằng user name
+      sharedUtils.showLoading();
+      UserService.getUser({UserName:user.UserName}) // lấy user bằng user name
         .then(function success(data){
-          console.log(JSON.stringify(data));
-            if((user.UserName.toLowerCase() == data.UserName.toLowerCase()) && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
-              $window.localStorage['username'] = user.UserName;
-              $window.localStorage['pass'] = user.Pass;
-              
-              CartService.getCartByUserId( UserService.getCurUser()._id)
-              .then(function success(cart){
-                  console.log("cur cart"+ JSON.stringify(cart));
-                  if (cart===null){
-                    CartService.addCart(UserService.getCurUser()._id)
-                    .then(function success(newcart){
-                      $rootScope.numCartItems = 0;
-                    }, function error(msg){
-                      sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
+            sharedUtils.hideLoading();
+            if(data==null){
+              sharedUtils.showAlert("warning","Tài khoản không tồn tại!");
+              return;
+            }
+            if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase()) 
+                && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
+                $window.localStorage['username'] = user.UserName;
+                $window.localStorage['pass'] = user.Pass;
+                $rootScope.userName =data.FullName;
+                CartService.getCartByUserId( UserService.getCurUser()._id)
+                .then(function success(cart){
+                    console.log("cur cart"+ JSON.stringify(cart));
+                    if (cart===null){
+                      CartService.addCart(UserService.getCurUser()._id)
+                      .then(function success(newcart){
+                        $rootScope.numCartItems = 0;
+                      }, function error(msg){
+                        sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
+                      });
+                    }
+                    $rootScope.numCartItems=cart===null? 0 : cart.OrderDetails.length;
+                    $ionicHistory.nextViewOptions({
+                      historyRoot: true
                     });
-                  }
-                  $rootScope.numCartItems=cart===null? 0 : cart.OrderDetails.length;
-                  $ionicHistory.nextViewOptions({
-                    historyRoot: true
-                  });
-                  $ionicSideMenuDelegate.canDragContent(true);  // Sets up the sideMenu dragable
-                  $rootScope.extras = true;
-                  sharedUtils.hideLoading();
-                    
-                  if(data.isActive)
-                    $state.go('reminder', {}, {location: "replace"});
-                  else
-                  $state.go('home', {}, {location: "replace"});
-                  $scope.user = {};
-              }, function error(msg){
-                sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
-              });
-              
-              //$rootScope.numCartItems = CartService.cart.OrderDetails.length;
-             
+                    $ionicSideMenuDelegate.canDragContent(true);  // Sets up the sideMenu dragable
+                    $rootScope.extras = true;    
+                    if(data.isActive){
+                      $state.go('reminder', {}, {location: "replace"});
+                    }                   
+                    else{
+                      $state.go('home', {}, {location: "replace"});
+                    }
+                    $scope.user = {};
+                }, function error(msg){
+                  sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
+                });             
+                //$rootScope.numCartItems = CartService.cart.OrderDetails.length;
             }
               else{
-                sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
+                sharedUtils.showAlert("warning","Mật khẩu tài khoản không đúng");
               }
         }, function error(msg){
           sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
+          sharedUtils.hideLoading();
         });  
     };
 
 
 
 })
-.controller('signupCtrl', function($scope,$rootScope,sharedUtils,$ionicSideMenuDelegate,$state, UserService) {
+.controller('signupCtrl', function($timeout,$scope,$rootScope,sharedUtils,$ionicSideMenuDelegate,$state, UserService) {
     $rootScope.extras = false; // For hiding the side bar and nav icon
     $scope.user = {};
     $scope.signupEmail = function () {
@@ -105,12 +110,15 @@ angular.module('app.controllers', [])
             UserService.addUser($scope.user) 
             .then(function success(data){
               sharedUtils.showAlert("success","Tạo thành công, vui lòng đăng nhập để tiếp tục");
+               $timeout(function () {
+                  $state.go('tabLogin.login');
+              }, 2000);
             }, function error(msg){
                sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
             });  
           }
           else
-          sharedUtils.showAlert("warning","Đã tồn tại username này rồi");
+          sharedUtils.showAlert("warning","Tên đăng nhập đã tồn tại.");
         }, function error(msg){
           sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
         });  
@@ -414,11 +422,14 @@ angular.module('app.controllers', [])
     $scope.updateCart();
   };
   $scope.updateCart = function(){
-       CartService.updateCart()
+    sharedUtils.showLoading();
+    CartService.updateCart()
       .then(function success(data){
           $rootScope.numCartItems = CartService.getCurCart().OrderDetails.length;
+          sharedUtils.hideLoading();
       }, function error(msg){
-          sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
+        sharedUtils.hideLoading();
+        sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
       });
     }
   $scope.editInfo = function(){
@@ -451,9 +462,10 @@ angular.module('app.controllers', [])
   };
   $scope.numBagChange=function(detail){
 
-    if (detail.numOfKilogramType <0) detail.numOfKilogramType =0;
-    else if(detail.numOfKilogramType ==0)
-        $scope.removeFromCart(detail);
+    if (detail.numOfKilogramType <=0) {
+      sharedUtils.showAlert("warning","Số bao không hợp lệ");
+      detail.numOfKilogramType=1;
+    }
     else{
       var temp =0;
       $scope.curCart.OrderDetails.forEach(function(detail,index){
@@ -622,10 +634,11 @@ angular.module('app.controllers', [])
               {
                 console.log($scope.Data.DayUse);
                 $scope.curUser.DayUse = $scope.Data.DayUse;
+                $scope.curUser.DayRemain = $scope.Data.DayUse;
                 $scope.curUser.isActive = true;
                 UserService.updateUser($scope.curUser)
                 .then(function success(data){
-                  sharedUtils.showAlert("success","Cảm ơn bạn ;)");
+                  sharedUtils.showAlert("success","Cảm ơn bạn.");
                 }, function error(msg){
                 });
               }
