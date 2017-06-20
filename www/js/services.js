@@ -1,5 +1,5 @@
 var hostURL='https://ugaoserver.herokuapp.com/api/';
-//var hostURL='http://localhost:3000/api/';
+//var hostURL='http://localhost:5000/api/';
 var headers = {"Authorization": "Basic dXNlcjoxMjM0NTY="};
 angular.module('app.services', [])
 
@@ -14,8 +14,14 @@ angular.module('app.services', [])
         var d = $q.defer();
         $http.get( hostURL +"users/"+login.UserName,{headers: headers})
         .success(function(data){
-          self.curUser = data;
-          d.resolve(data);
+            if (!data){
+                d.reject("error");
+            }
+            else{
+                self.curUser = data;
+                d.resolve(data);
+            }
+        
         })
         .error(function(msg){
             d.reject("error");
@@ -27,6 +33,18 @@ angular.module('app.services', [])
         $http.post( hostURL +"users/",user,{headers: headers})
         .success(function(data){
           self.curUser = data;
+          d.resolve("success");
+        })
+        .error(function(msg){
+            d.reject("error");
+        });
+        return d.promise;
+    },
+    'addFeedback': function(feedback){ // Hàm thêm user
+        var d = $q.defer();
+        console.log(JSON.stringify(feedback));
+        $http.post( hostURL +"feedbacks/",feedback,{headers: headers})
+        .success(function(data){
           d.resolve("success");
         })
         .error(function(msg){

@@ -1,4 +1,25 @@
 /* Utilities */
+.feedbackContainer .feedbackHeader button {
+    line-height: 5px !important;
+    min-height: 20px !important;
+}
+.feedbackContainer .feedbackHeader select{
+    color: rebeccapurple;
+    font: 20px;
+    border-color: rebeccapurple;
+    background: white;
+}
+.feedbackContainer .feedbackContain{
+    margin-top:10px;
+}
+.feedbackContainer .feedbackContain textarea{
+    width:100%;
+    border-top: 1px solid silver;
+}
+
+
+
+
 .estimateLevel1{
     color: white !important;
 }

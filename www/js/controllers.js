@@ -45,12 +45,9 @@ angular.module('app.controllers', [])
     }
 
     $scope.login = function(user) {
-      if (user.UserName == null || user.Pass == null){
-        sharedUtils.showAlert("warning","Vui lòng nhập thông tin tài khoản!");
-        return;
-      }
+
       if (!(user.UserName)||!(user.Pass)){
-        sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
+        sharedUtils.showAlert("warning","Vui lòng nhập tài khoản và mật khẩu!");
         return;
       }
       sharedUtils.showLoading();
@@ -63,43 +60,44 @@ angular.module('app.controllers', [])
             }
             if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase()) 
                 && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
-              $window.localStorage['username'] = user.UserName;
-              $window.localStorage['pass'] = user.Pass;
-              $rootScope.userName =data.FullName;
-              CartService.getCartByUserId( UserService.getCurUser()._id)
-              .then(function success(cart){
-                  console.log("cur cart"+ JSON.stringify(cart));
-                  if (cart===null){
-                    CartService.addCart(UserService.getCurUser()._id)
-                    .then(function success(newcart){
-                      $rootScope.numCartItems = 0;
-                    }, function error(msg){
-                      sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");;
+                $window.localStorage['username'] = user.UserName;
+                $window.localStorage['pass'] = user.Pass;
+                $rootScope.userName =data.FullName;
+                CartService.getCartByUserId( UserService.getCurUser()._id)
+                .then(function success(cart){
+                    console.log("cur cart"+ JSON.stringify(cart));
+                    if (cart===null){
+                      CartService.addCart(UserService.getCurUser()._id)
+                      .then(function success(newcart){
+                        $rootScope.numCartItems = 0;
+                      }, function error(msg){
+                        sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
+                      });
+                    }
+                    $rootScope.numCartItems=cart===null? 0 : cart.OrderDetails.length;
+                    $ionicHistory.nextViewOptions({
+                      historyRoot: true
                     });
-                  }
-                  $rootScope.numCartItems=cart===null? 0 : cart.OrderDetails.length;
-                  $ionicHistory.nextViewOptions({
-                    historyRoot: true
-                  });
-                  $ionicSideMenuDelegate.canDragContent(true);  // Sets up the sideMenu dragable
-                  $rootScope.extras = true;    
-                  if(data.isActive){
-                    $state.go('reminder', {}, {location: "replace"});
-                  }                   
-                  else{
-                    $state.go('home', {}, {location: "replace"});
-                  }
-                  $scope.user = {};
-              }, function error(msg){
-                sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
-              });             
-              //$rootScope.numCartItems = CartService.cart.OrderDetails.length;
+                    $ionicSideMenuDelegate.canDragContent(true);  // Sets up the sideMenu dragable
+                    $rootScope.extras = true;    
+                    if(data.isActive){
+                      $state.go('reminder', {}, {location: "replace"});
+                    }                   
+                    else{
+                      $state.go('home', {}, {location: "replace"});
+                    }
+                    $scope.user = {};
+                }, function error(msg){
+                  sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
+                });             
+                //$rootScope.numCartItems = CartService.cart.OrderDetails.length;
             }
             else{
               sharedUtils.showAlert("warning","Mật khẩu tài khoản không đúng");
             }
         }, function error(msg){
           sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
+          sharedUtils.hideLoading();
         });  
     };
 
@@ -701,7 +699,7 @@ angular.module('app.controllers', [])
               $scope.curUser.Pass = $scope.passData.passNew;
               UserService.updateUser($scope.curUser)
               .then(function success(data){
-                sharedUtils.showAlert("warning","Đổi pass thành công");
+                sharedUtils.showAlert("success","Đổi pass thành công");
               }, function error(msg){
                 sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
               });
@@ -734,7 +732,7 @@ angular.module('app.controllers', [])
               $scope.curUser.DayRemain = $scope.estimateData.DayRemain;
                 UserService.updateUser($scope.curUser)
                 .then(function success(data){
-                  sharedUtils.showAlert("warning","Đổi pass thành công");
+                  sharedUtils.showAlert("success","Đổi thành công");
                 }, function error(msg){
                   sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
                 });
@@ -782,8 +780,33 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('supportCtrl', function($scope,$rootScope) {
+.controller('supportCtrl', function($scope,$rootScope, UserService,sharedUtils) {
     $rootScope.extras=true;
+    $scope.feedback = {
+      catalogue: 4,
+      contain: "",
+      dateCreate:  new Date(),
+      isDeleteFlag: false,
+      isRead: false
+    }
+    $scope.sendFeedback = function(){
+       
+      if($scope.feedback.contain == "")
+         sharedUtils.showAlert("warning","Bạn chưa nhập nội dung kìa");
+      else
+      {
+        $scope.feedback.userId = UserService.curUser._id;
+        $scope.feedback.userName = UserService.curUser.UserName;
+        console.log(  $scope.feedback);
+        UserService.addFeedback($scope.feedback)
+        sharedUtils.showAlert("success","Gửi phản hồi thành công, cảm ơn bạn");
+        $scope.feedback = {
+        catalogue: 1,
+        contain: ""
+      }
+     
+    }
+    }
 })
 
 .controller('forgotPasswordCtrl', function($scope,$rootScope) {
