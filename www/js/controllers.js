@@ -8,12 +8,18 @@ angular.module('app.controllers', [])
     $scope.user = {};
     /// Khi logout thì xóa hết dữ liệu tạm
     $scope.$on('$ionicView.enter', function(ev) {
+      
+      sharedUtils.showLoading();
+
       if(ev.targetScope !== $scope){
         $ionicHistory.clearHistory();
         $ionicHistory.clearCache();
       }
       var un = $window.localStorage['username'];
       var pass = $window.localStorage['pass'];
+
+      sharedUtils.hideLoading();
+
       if (un != "" && pass != ""){
         var user = {};
         user.UserName = un;
@@ -86,9 +92,9 @@ angular.module('app.controllers', [])
                 });             
                 //$rootScope.numCartItems = CartService.cart.OrderDetails.length;
             }
-              else{
-                sharedUtils.showAlert("warning","Mật khẩu tài khoản không đúng");
-              }
+            else{
+              sharedUtils.showAlert("warning","Mật khẩu tài khoản không đúng");
+            }
         }, function error(msg){
           sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
           sharedUtils.hideLoading();
@@ -374,23 +380,23 @@ angular.module('app.controllers', [])
       } 
   };
   $scope.headerAddProductClick = function(){ // Hàm xử lí sự kiện click vào dòng info  
-      if ( $scope.headerAddProduct == false){
-        $scope.headerAddProduct = true;
-      }
-        
-      else {
-        $scope.headerAddProduct = false;
-      }
-      sharedUtils.showLoading();
-      ItemService.getAllItems()
-        .then(function success(data){
-            $scope.items=data;
-            $scope.Products=data;
-            sharedUtils.hideLoading();
-        }, function error(msg){
+    if ( $scope.headerAddProduct == false){
+      $scope.headerAddProduct = true;
+    }
+      
+    else {
+      $scope.headerAddProduct = false;
+    }
+    sharedUtils.showLoading();
+    ItemService.getAllItems()
+      .then(function success(data){
+          $scope.items=data;
+          $scope.Products=data;
           sharedUtils.hideLoading();
-          console.log(msg);
-        });      
+      }, function error(msg){
+        sharedUtils.hideLoading();
+        console.log(msg);
+      });      
   }
   $scope.$on('$ionicView.enter', function(ev) {
       $scope.Init();
