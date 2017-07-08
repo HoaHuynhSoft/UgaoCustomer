@@ -53,7 +53,7 @@ angular.module('app.controllers', [])
               return;
             }
             if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase()) 
-                && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
+                && (user.Pass == data.Pass)){
                 $window.localStorage['username'] = user.UserName;
                 $window.localStorage['pass'] = user.Pass;
                 $rootScope.userName =data.FullName;
