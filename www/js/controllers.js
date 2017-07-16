@@ -54,8 +54,13 @@ angular.module('app.controllers', [])
               sharedUtils.showAlert("warning","Tài khoản không tồn tại!");
               return;
             }
+<<<<<<< HEAD
             if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase())
                 && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
+=======
+            if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase()) 
+                && (user.Pass == data.Pass)){
+>>>>>>> 9705250307f398dd2db760ada9538ce88cf663c4
                 $window.localStorage['username'] = user.UserName;
                 $window.localStorage['pass'] = user.Pass;
                 $rootScope.userName =data.FullName;
