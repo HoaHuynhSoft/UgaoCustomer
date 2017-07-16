@@ -14,7 +14,6 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
 })
 .run(function($state,$ionicPlatform,$rootScope) {
   $rootScope.extras = false;
-
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -40,7 +39,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
     FCMPlugin.onNotification(
       function(data){
         if(data.wasTapped){
-          if(data.type =="1") 
+          if(data.type =="1")
             $state.go('orderDetail',{id: data.id});
           else if(data.type =="2")  // reminder nor
             $state.go('reminder');

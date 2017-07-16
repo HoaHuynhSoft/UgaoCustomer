@@ -1,11 +1,11 @@
-var hostURL='https://ugaoserver.herokuapp.com/api/';
-//var hostURL='http://localhost:5000/api/';
+//var hostURL='https://ugaoserver.herokuapp.com/api/';
+var hostURL='http://192.168.1.200:3000/api/';
 var headers = {"Authorization": "Basic dXNlcjoxMjM0NTY="};
 angular.module('app.services', [])
 
 .factory("UserService", function($http,$q){ // Service cho user
-    
-  var self = { 
+
+  var self = {
     'curUser' : {},
     'getCurUser': function(){ // Hàm lấy user hiện tại
         return self.curUser;
@@ -21,7 +21,7 @@ angular.module('app.services', [])
                 self.curUser = data;
                 d.resolve(data);
             }
-        
+
         })
         .error(function(msg){
             d.reject("error");
@@ -68,7 +68,7 @@ angular.module('app.services', [])
   return self;
 })
 .factory("ItemService", function($http,$q,CartService){ // Service cho post
-    
+
   var self = {  // tạo một đối tượng service, chứa các hàm và biến
     'items' : [], // chứa posts lấy về
     'getItemById': function(itemId){ // Hàm lấy tất cả bài của một userId
@@ -109,17 +109,17 @@ angular.module('app.services', [])
   return self;
 })
 .factory("CartService", function($http,$q){ // Service cho post
-    
+
   var self = {  // tạo một đối tượng service, chứa các hàm và biến
     'cart' : {}, // chứa posts lấy về
-    'getCurCart': function(){ 
+    'getCurCart': function(){
         return self.cart;
     },
-    'setCurCart': function(cart){ 
+    'setCurCart': function(cart){
         console.log(cart);
         self.cart=cart;
     },
-    'addItemCurCart': function(item, kilogramType,numOfBag){ 
+    'addItemCurCart': function(item, kilogramType,numOfBag){
         var isExist = false;
         if(self.cart.OrderDetails!=null){
             self.cart.OrderDetails.forEach(function(detail, index){
@@ -156,15 +156,15 @@ angular.module('app.services', [])
         });
         self.cart.Total = temp;
     },
-    'cartOrdered': function(){ 
-        
+    'cartOrdered': function(){
+
         var temp =0;
         self.cart.OrderDetails.forEach(function(detail,index){
           temp += detail.Item.price*detail.kilogramType*detail.numOfKilogramType;
         });
         self.cart.Total = temp;
     },
-    'updateCart': function(){ // Hàm cập nhật thông tin user        
+    'updateCart': function(){ // Hàm cập nhật thông tin user
         var d = $q.defer();
         $http.put(hostURL +"carts/"+self.cart._id,self.cart,{headers: headers})
         .success(function(data){
@@ -201,7 +201,7 @@ angular.module('app.services', [])
         }
         tempCart.OrderDetails = [];
         tempCart.Total = 0;
-        tempCart.ItemChange=false; 
+        tempCart.ItemChange=false;
         $http.post( hostURL +"carts",tempCart,{headers: headers})
         .success(function(data){
           self.cart = data;
@@ -218,7 +218,7 @@ angular.module('app.services', [])
 })
 .factory('sharedUtils',function($ionicLoading,toaster){
     var functionObj={};
-    functionObj.showLoading=function(){ 
+    functionObj.showLoading=function(){
       $ionicLoading.show({
         content: '<i class=" ion-loading-c"></i> ', // The text to display in the loading indicator
         animation: 'fade-in', // The animation to use
@@ -238,7 +238,7 @@ angular.module('app.services', [])
 
 })
 .factory('OrderService', function($http,$q){
-    
+
     var self = {  // tạo một đối tượng service, chứa các hàm và biến
     'getOrderByUserId': function(userId){ // Hàm lấy tất cả bài của một userId
         var d = $q.defer();
@@ -264,7 +264,7 @@ angular.module('app.services', [])
     },
     'addOrder': function(newOrder){ // Hàm thêm một order mới
         var d = $q.defer();
-        $http.post( hostURL +"orders/",newOrder,{headers: headers}) 
+        $http.post( hostURL +"orders/",newOrder,{headers: headers})
         .success(function(data){
           d.resolve(data);
         })

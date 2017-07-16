@@ -8,18 +8,14 @@ angular.module('app.controllers', [])
     $scope.user = {};
     /// Khi logout thì xóa hết dữ liệu tạm
     $scope.$on('$ionicView.enter', function(ev) {
-      
       sharedUtils.showLoading();
-
       if(ev.targetScope !== $scope){
         $ionicHistory.clearHistory();
         $ionicHistory.clearCache();
       }
       var un = $window.localStorage['username'];
       var pass = $window.localStorage['pass'];
-
       sharedUtils.hideLoading();
-
       if (un != "" && pass != ""){
         var user = {};
         user.UserName = un;
@@ -30,26 +26,26 @@ angular.module('app.controllers', [])
     $scope.getCart = function(){
       CartService.getCartByUserId( UserService.getCurUser()._id)
           .then(function success(data){
-              console.log("cur cart"+ JSON.stringify(data));
-              if (data===null){
-                CartService.addCart(UserService.getCurUser()._id)
-                .then(function success(data){
-                }, function error(msg){
-                  sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");;
-                });
-              }
-              $rootScope.numCartItems = CartService.getCurCart().OrderDetails.length;
+            console.log("cur cart"+ JSON.stringify(data));
+            if (data===null){
+              CartService.addCart(UserService.getCurUser()._id)
+              .then(function success(data){
+              }, function error(msg){
+                sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");;
+              });
+            }
+            $rootScope.numCartItems = CartService.getCurCart().OrderDetails.length;
           }, function error(msg){
             sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
           });
     }
 
     $scope.login = function(user) {
-
       if (!(user.UserName)||!(user.Pass)){
         sharedUtils.showAlert("warning","Vui lòng nhập tài khoản và mật khẩu!");
         return;
       }
+      console.log($rootScope.PushToken);
       sharedUtils.showLoading();
       UserService.getUser({UserName:user.UserName}) // lấy user bằng user name
         .then(function success(data){
@@ -58,11 +54,13 @@ angular.module('app.controllers', [])
               sharedUtils.showAlert("warning","Tài khoản không tồn tại!");
               return;
             }
-            if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase()) 
+            if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase())
                 && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
                 $window.localStorage['username'] = user.UserName;
                 $window.localStorage['pass'] = user.Pass;
                 $rootScope.userName =data.FullName;
+                data.PushToken = $rootScope.PushToken;
+                UserService.updateUser(data);
                 CartService.getCartByUserId( UserService.getCurUser()._id)
                 .then(function success(cart){
                     console.log("cur cart"+ JSON.stringify(cart));
@@ -79,17 +77,17 @@ angular.module('app.controllers', [])
                       historyRoot: true
                     });
                     $ionicSideMenuDelegate.canDragContent(true);  // Sets up the sideMenu dragable
-                    $rootScope.extras = true;    
+                    $rootScope.extras = true;
                     if(data.isActive){
                       $state.go('reminder', {}, {location: "replace"});
-                    }                   
+                    }
                     else{
                       $state.go('home', {}, {location: "replace"});
                     }
                     $scope.user = {};
                 }, function error(msg){
                   sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
-                });             
+                });
                 //$rootScope.numCartItems = CartService.cart.OrderDetails.length;
             }
             else{
@@ -98,7 +96,7 @@ angular.module('app.controllers', [])
         }, function error(msg){
           sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
           sharedUtils.hideLoading();
-        });  
+        });
     };
 
 
@@ -113,7 +111,7 @@ angular.module('app.controllers', [])
           console.log("dang ki " + data);
           if (data === null)
           {
-            UserService.addUser($scope.user) 
+            UserService.addUser($scope.user)
             .then(function success(data){
               sharedUtils.showAlert("success","Tạo thành công, vui lòng đăng nhập để tiếp tục");
                $timeout(function () {
@@ -121,13 +119,13 @@ angular.module('app.controllers', [])
               }, 2000);
             }, function error(msg){
                sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
-            });  
+            });
           }
           else
           sharedUtils.showAlert("warning","Tên đăng nhập đã tồn tại.");
         }, function error(msg){
           sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
-        });  
+        });
 
     }
 
@@ -136,7 +134,7 @@ angular.module('app.controllers', [])
   $scope.slideChanged = function(index) {
     $scope.slideIndex = index;
   };
-  $scope.weight=10; 
+  $scope.weight=10;
   $scope.data={};
   $scope.data.numOfBag =1;
   $scope.clientSideList = [
@@ -145,19 +143,19 @@ angular.module('app.controllers', [])
     { text: "50 kg", value: 50 },
     { text: "100 kg", value: 100 }
   ];
-  
+
   $ionicSideMenuDelegate.canDragContent(true);
   $rootScope.extras=true;
   $scope.search={};
   $scope.Products=[];
   $scope.curItemClick= {};
   $scope.$on('$ionicView.enter', function(ev) {
-      $ionicSideMenuDelegate.canDragContent(true);
-      $rootScope.extras=true;
-      if(ev.targetScope !== $scope){
-        $ionicHistory.clearHistory();
-        $ionicHistory.clearCache();
-      }
+    $ionicSideMenuDelegate.canDragContent(true);
+    $rootScope.extras=true;
+    if(ev.targetScope !== $scope){
+      $ionicHistory.clearHistory();
+      $ionicHistory.clearCache();
+    }
     $scope.Init();
   });
   $scope.Init=function(){
@@ -165,11 +163,10 @@ angular.module('app.controllers', [])
     sharedUtils.showLoading();
     ItemService.getAllItems()
     .then(function success(data){
-        
-        $scope.Products=ItemService.checkItemInCard(data);
-        console.log($scope.Products);
-        $scope.items= $scope.Products
-        sharedUtils.hideLoading();
+      $scope.Products=ItemService.checkItemInCard(data);
+      console.log($scope.Products);
+      $scope.items= $scope.Products
+      sharedUtils.hideLoading();
     }, function error(msg){
       sharedUtils.hideLoading();
       console.log(msg);
@@ -209,16 +206,16 @@ angular.module('app.controllers', [])
     });
   };
   $scope.addToCart=function(item,kilogramType,numofbag){
-      CartService.addItemCurCart(item,kilogramType,numofbag);
-      CartService.updateCart()
+    CartService.addItemCurCart(item,kilogramType,numofbag);
+    CartService.updateCart()
       .then(function success(data){
-          $rootScope.numCartItems = CartService.getCurCart().OrderDetails.length;
-          sharedUtils.showAlert("success","Đã bỏ vào giỏ hàng");
-          $scope.Init();
+        $rootScope.numCartItems = CartService.getCurCart().OrderDetails.length;
+        sharedUtils.showAlert("success","Đã bỏ vào giỏ hàng");
+        $scope.Init();
       }, function error(msg){
         //CartService.removeDetailFromCartByItem(item);
         sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
-      });
+    });
   };
   $scope.orderNow=function(item){
     var myPopup = $ionicPopup.show({
@@ -228,14 +225,14 @@ angular.module('app.controllers', [])
       //template:'<ion-radio ng-repeat="item in clientSideList" ng-value="item.value" ng-click="getKilo(item)" ng-model="data"> {{ item.text }} </ion-radio>',
       buttons: [
         { text: 'Đóng' },
-      {
-       text: '<b>Đặt</b>',
-         type: 'button-positive',
-        onTap: function(e) {
-          $scope.addToCart(item,$scope.weight,parseInt($scope.data.numOfBag));
-          $state.go('myCart');
+        {
+          text: '<b>Đặt</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            $scope.addToCart(item,$scope.weight,parseInt($scope.data.numOfBag));
+            $state.go('myCart');
+          }
         }
-      }
       ]
     });
   };
@@ -247,16 +244,16 @@ angular.module('app.controllers', [])
       scope: $scope,
       title: "Bạn muốn mua bao nhiêu Kg "+ item.name+"?",
       templateUrl:'templates/buyDetail.html',
-      //template:'<ion-radio ng-repeat="item in clientSideList" ng-value="item.value" ng-click="getKilo(item)" ng-model="data"> {{ item.text }} </ion-radio>',   
+      //template:'<ion-radio ng-repeat="item in clientSideList" ng-value="item.value" ng-click="getKilo(item)" ng-model="data"> {{ item.text }} </ion-radio>',
       buttons: [
         { text: 'Đóng' },
-      {
-        text: '<b>Thêm</b>',
-         type: 'button-positive',
-        onTap: function(e) {
-          $scope.addToCart(item,$scope.weight,parseInt($scope.data.numOfBag));
+        {
+          text: '<b>Thêm</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            $scope.addToCart(item,$scope.weight,parseInt($scope.data.numOfBag));
+          }
         }
-      }
       ]
     });
   };
@@ -280,24 +277,22 @@ angular.module('app.controllers', [])
       sharedUtils.showLoading();
       $rootScope.extras=true;
       $ionicSideMenuDelegate.canDragContent(true);
-      
       $scope.curUser = UserService.getCurUser();
-
       if ($scope.curUser.DayRemain >10){
         $scope.estimateLevel = 'estimateLevel2';
-          $scope.outOfStockNor='inUsing';
-      } 
+        $scope.outOfStockNor='inUsing';
+      }
       else //if ($scope.curUser.DayRemain <5)
       {
-          $scope.estimateLevel = 'estimateLevel3';
-            $scope.outOfStockNor='emergency';
-      } 
+        $scope.estimateLevel = 'estimateLevel3';
+        $scope.outOfStockNor='emergency';
+      }
       $scope.monthNo = Math.floor($scope.curUser.DayRemain / 30);
       $scope.dayNo =  $scope.curUser.DayRemain % 30;
       $scope.curUser = UserService.getCurUser();
       CartService.getCartByUserId( UserService.getCurUser()._id)
-        .then(function success(data){                
-            $scope.curCart = data;
+        .then(function success(data){
+          $scope.curCart = data;
           sharedUtils.hideLoading();
         }, function error(msg){
           sharedUtils.hideLoading();
@@ -305,36 +300,36 @@ angular.module('app.controllers', [])
         });
     };
     $scope.order=function(){
-        console.log(JSON.stringify($scope.curCart));
-        if ($scope.curCart.OrderDetails.length <1 || $scope.curCart.OrderDetails===undefined)  {
-           sharedUtils.showAlert("warning","Bạn chưa chọn sản phẩm nào cả, vui lòng chọn một sản phẩm ở màn hình chính");
-           $state.go('home');
-           //return;
-        };
-        if (!$scope.curUser.Phone){
-           sharedUtils.showAlert("warning","Cung cấp tối thiểu là sđt để đặt hàng");
-           return;
-        };
-        $state.go('myCart');
-        /*var order ={};
-        order.OwnerId=$scope.curUser._id;
-        order.OrderDetails=$scope.curCart.OrderDetails;
-		    order.Total=$scope.curCart.Total;
-        order.Status=1;
-		    order.Name=$scope.curUser.FullName;
-        order.PhoneNumber=$scope.curUser.Phone;
-		    order.Address=$scope.curUser.Address;
-		    order.OrderDate = new Date();
-        OrderService.addOrder(order)
-        .then(function success(data){
-            sharedUtils.showAlert("success","Cảm ơn bạn đã mua hàng, nhân viên của Ugas sẽ gọi trong ít phút tới để xác nhận đơn hàng!");
-            $scope.curUser.DayRemain =  $scope.curUser.DayUse;
-            UserService.updateUser($scope.curUser);
-            // Navigation to Order details
-            $state.go('orderDetail',{id: data._id});
-        }, function error(msg){
-             sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
-        });*/
+      console.log(JSON.stringify($scope.curCart));
+      if ($scope.curCart.OrderDetails.length <1 || $scope.curCart.OrderDetails===undefined)  {
+          sharedUtils.showAlert("warning","Bạn chưa chọn sản phẩm nào cả, vui lòng chọn một sản phẩm ở màn hình chính");
+          $state.go('home');
+          //return;
+      };
+      if (!$scope.curUser.Phone){
+          sharedUtils.showAlert("warning","Cung cấp tối thiểu là sđt để đặt hàng");
+          return;
+      };
+      $state.go('myCart');
+      /*var order ={};
+      order.OwnerId=$scope.curUser._id;
+      order.OrderDetails=$scope.curCart.OrderDetails;
+      order.Total=$scope.curCart.Total;
+      order.Status=1;
+      order.Name=$scope.curUser.FullName;
+      order.PhoneNumber=$scope.curUser.Phone;
+      order.Address=$scope.curUser.Address;
+      order.OrderDate = new Date();
+      OrderService.addOrder(order)
+      .then(function success(data){
+          sharedUtils.showAlert("success","Cảm ơn bạn đã mua hàng, nhân viên của Ugas sẽ gọi trong ít phút tới để xác nhận đơn hàng!");
+          $scope.curUser.DayRemain =  $scope.curUser.DayUse;
+          UserService.updateUser($scope.curUser);
+          // Navigation to Order details
+          $state.go('orderDetail',{id: data._id});
+      }, function error(msg){
+          sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
+      });*/
     };
 })
 
@@ -362,7 +357,7 @@ angular.module('app.controllers', [])
   $rootScope.extras=true;
   $scope.showProducts=false;
   $scope.curCart = {};
-  $scope.weight=10; 
+  $scope.weight=10;
   $scope.data={};
   $scope.data.numOfBag=1;
   $scope.clientSideList = [
@@ -374,16 +369,16 @@ angular.module('app.controllers', [])
   $scope.headerInfoClick = function(){ // Hàm xử lí sự kiện click vào dòng info
       if ( $scope.headerInfo == false){
           $scope.headerInfo = true;
-      }  
+      }
       else {
           $scope.headerInfo = false;
-      } 
+      }
   };
-  $scope.headerAddProductClick = function(){ // Hàm xử lí sự kiện click vào dòng info  
+  $scope.headerAddProductClick = function(){ // Hàm xử lí sự kiện click vào dòng info
     if ( $scope.headerAddProduct == false){
       $scope.headerAddProduct = true;
     }
-      
+
     else {
       $scope.headerAddProduct = false;
     }
@@ -396,14 +391,14 @@ angular.module('app.controllers', [])
       }, function error(msg){
         sharedUtils.hideLoading();
         console.log(msg);
-      });      
+      });
   }
   $scope.$on('$ionicView.enter', function(ev) {
       $scope.Init();
   });
   $scope.Init=function(){
     sharedUtils.showLoading();
-    
+
     $scope.curUser = UserService.getCurUser();
     CartService.getCartByUserId($scope.curUser._id)
     .then(function success(data){
@@ -413,8 +408,8 @@ angular.module('app.controllers', [])
           sharedUtils.hideLoading();
           sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
         });
-    //$scope.curItems = 
-    
+    //$scope.curItems =
+
     if ( $rootScope.numCartItems ==0){
         sharedUtils.showAlert("warning","Giỏ hàng rỗng, chọn ít nhất một sản phẩm để đặt hàng");
         $state.go('home');
@@ -431,8 +426,8 @@ angular.module('app.controllers', [])
     sharedUtils.showLoading();
     CartService.updateCart()
       .then(function success(data){
-          $rootScope.numCartItems = CartService.getCurCart().OrderDetails.length;
-          sharedUtils.hideLoading();
+        $rootScope.numCartItems = CartService.getCurCart().OrderDetails.length;
+        sharedUtils.hideLoading();
       }, function error(msg){
         sharedUtils.hideLoading();
         sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
@@ -482,7 +477,7 @@ angular.module('app.controllers', [])
       $scope.updateCart();
     }
   };
-  
+
   $scope.order=function(){
       if ($scope.curCart.OrderDetails.length <1)  {
         sharedUtils.showAlert("warning","Bạn chưa chọn sản phẩm nào cả, vui lòng chọn một sản phẩm ở màn hình chính");
@@ -494,7 +489,7 @@ angular.module('app.controllers', [])
       };
     CartService.getCartByUserId($scope.curUser._id)
       .then(function success(data){
-          if(data.ItemChange){   
+          if(data.ItemChange){
             var myPopup = $ionicPopup.show({
               scope: $scope,
               title: 'Nhắc Nhở',
@@ -510,7 +505,7 @@ angular.module('app.controllers', [])
                    CartService.updateCart();
                    sharedUtils.hideLoading();
                    $scope.Init();
-                   
+
                 }
               }
               ]
@@ -544,21 +539,21 @@ angular.module('app.controllers', [])
                 sharedUtils.showAlert("warning",msg.error);
             });
           }
-          
+
         }, function error(msg){
           sharedUtils.hideLoading();
           sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
         });
-        
+
   };
 
   $scope.ShowProductsInCart=function(){
     if ( $scope.showProducts == false){
             $scope.showProducts = true;
-    }  
+    }
     else {
           $scope.showProducts = false;
-    } 
+    }
   }
 
 })
@@ -606,7 +601,7 @@ angular.module('app.controllers', [])
 
 })
 .controller('orderDetailCtrl', function($scope,sharedUtils, $ionicPopup,$rootScope,$stateParams,OrderService,$ionicSideMenuDelegate,UserService) {
-  
+
   $rootScope.extras=true;
   $ionicSideMenuDelegate.canDragContent(true);
   $scope.curOrder = {};
@@ -627,7 +622,7 @@ angular.module('app.controllers', [])
       $scope.curOrder = data;
       $scope.curUser = UserService.getCurUser();
       if (!$scope.curUser.isActive){
-     
+
       var myPopup = $ionicPopup.show({
         scope: $scope,
         title: 'Bạn sẽ dùng hết gạo trong khoảng bao nhiêu ngày nhỉ ? 60 ngày hả ?',
@@ -664,7 +659,7 @@ angular.module('app.controllers', [])
                                      sharedUtils,UserService) {
   $scope.$on('$ionicView.enter', function(ev) {
     $scope.curUser = UserService.getCurUser();
-  });                                     
+  });
   $rootScope.extras=true;
   $scope.curPostSourceName = "All";
   $scope.languageClick = function(){ // Hàm xử lí sự kiện click vào item General Setting
@@ -682,7 +677,7 @@ angular.module('app.controllers', [])
         }
         ]
       });
-  } 
+  }
   $scope.passClick = function(){
     $scope.passData = {};
     var myPopup = $ionicPopup.show({
@@ -737,13 +732,13 @@ angular.module('app.controllers', [])
                   sharedUtils.showAlert("warning","Đã có lỗi xảy ra, liên hệ: Vui lòng liên hệ đại lý để được hỗ trợ");
                 });
             }
-            
+
           }
         }
         ]
       });
   }
-  $scope.infoClick = function(){  
+  $scope.infoClick = function(){
     $scope.data =  $scope.curUser;
     var myPopup = $ionicPopup.show({
       template: '<label class="item item-input"><input type="text" ng-model="data.FullName" placeholder="Tên đầy đủ" > </label><label class="item item-input"><input type="text" ng-model="data.Phone" placeholder="Sđt"> </label><label class="item item-input"><input type="text" ng-model="data.Address" placeholder="Địa chỉ"> </label><label class="item item-input"><input type="text" ng-model="data.Email" placeholder="Email"> </label>',
@@ -790,7 +785,7 @@ angular.module('app.controllers', [])
       isRead: false
     }
     $scope.sendFeedback = function(){
-       
+
       if($scope.feedback.contain == "")
          sharedUtils.showAlert("warning","Bạn chưa nhập nội dung kìa");
       else
@@ -804,7 +799,7 @@ angular.module('app.controllers', [])
         catalogue: 1,
         contain: ""
       }
-     
+
     }
     }
 })
