@@ -14,7 +14,6 @@ angular.module('app.services', [])
         var d = $q.defer();
         $http.get( hostURL +"users/"+login.UserName,{headers: headers})
         .success(function(data){
-<<<<<<< HEAD
             if (!data){
                 d.reject("error");
             }
@@ -22,11 +21,8 @@ angular.module('app.services', [])
                 self.curUser = data;
                 d.resolve(data);
             }
-
-=======
           self.curUser = data;
           d.resolve(data);
->>>>>>> 9705250307f398dd2db760ada9538ce88cf663c4
         })
         .error(function(msg){
             d.reject("error");

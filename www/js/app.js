@@ -12,7 +12,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
     $ionicConfigProvider.scrolling.jsScrolling(false);
     $ionicConfigProvider.tabs.position('bottom'); // other values: top
 })
-.run(function($state,$ionicPlatform,$rootScope) {
+.run(function($state,$ionicPlatform,$rootScope,$ionicPopup) {
   $rootScope.extras = false;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -46,6 +46,16 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
           else
             $state.go('orders');
         }else{
+           $state.go('reminder');
+          // var myPopup = $ionicPopup.show({
+          //   template: data.body,
+          //   title: 'Thông báo',
+          //   scope: $scope,
+          //   buttons: [
+          //     { text: 'Đóng' },
+
+          //     ]
+          //   });
         }
       },
       function(msg){
