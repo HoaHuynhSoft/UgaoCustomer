@@ -47,22 +47,27 @@ angular.module('app.controllers', [])
       }
       console.log($rootScope.PushToken);
       sharedUtils.showLoading();
-      UserService.getUser({UserName:user.UserName}) // lấy user bằng user name
+      //Get user to check
+      UserService.getUser({UserName:user.UserName}) 
         .then(function success(data){
+          //If get success
             sharedUtils.hideLoading();
             if(data==null){
               sharedUtils.showAlert("warning","Tài khoản không tồn tại!");
               return;
             }
-            if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase())
-                && (user.Pass.toLowerCase() == data.Pass.toLowerCase())){
-            if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase())
-                && (user.Pass == data.Pass)){
+            // Then check info input
+            if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase()) && (user.Pass == data.Pass)){
+                  // If correct then 
                 $window.localStorage['username'] = user.UserName;
                 $window.localStorage['pass'] = user.Pass;
                 $rootScope.userName =data.FullName;
-                data.PushToken = $rootScope.PushToken;
-                UserService.updateUser(data);
+                // Update device token 
+                if ($rootScope.PushToken != null){
+                  data.PushToken = $rootScope.PushToken;
+                  UserService.updateUser(data);
+                }
+                // Get user's cart
                 CartService.getCartByUserId( UserService.getCurUser()._id)
                 .then(function success(cart){
                     console.log("cur cart"+ JSON.stringify(cart));
@@ -71,7 +76,7 @@ angular.module('app.controllers', [])
                       .then(function success(newcart){
                         $rootScope.numCartItems = 0;
                       }, function error(msg){
-                        sharedUtils.showAlert("warning","Tài khoản mật khẩu không hợp lệ!");
+                        sharedUtils.showAlert("warning","Gặp lỗi khi lấy thông tin giỏ hàng!");
                       });
                     }
                     $rootScope.numCartItems=cart===null? 0 : cart.OrderDetails.length;
@@ -95,14 +100,11 @@ angular.module('app.controllers', [])
             else{
               sharedUtils.showAlert("warning","Mật khẩu tài khoản không đúng");
             }
-        }}, function error(msg){
-          sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
+        }, function error(msg){
+          sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra thông tin username hoặc mạng và thử lại");
           sharedUtils.hideLoading();
         });
     };
-
-
-
 })
 .controller('signupCtrl', function($timeout,$scope,$rootScope,sharedUtils,$ionicSideMenuDelegate,$state, UserService) {
     $rootScope.extras = false; // For hiding the side bar and nav icon
