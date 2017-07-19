@@ -39,36 +39,33 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
     FCMPlugin.onNotification(
       function(data){
         if(data.wasTapped){
-          if(data.type =="1")
+          if(data.type =="2" || data.type =="0")
             $state.go('orderDetail',{id: data.id});
-          else if(data.type =="2")  // reminder nor
+          if(data.type =="4" || data.type =="5")
             $state.go('reminder');
-          else
-            $state.go('orders');
+          if(data.type =="6")
+            $state.go('nortify');
         }else{
-           //$state.go('reminder');
-            var alertPopup = $ionicPopup.alert({
+          var message="";
+          if(data.type =="0")
+          {
+            message="Đơn hàng của bạn đã được chuyển đi";
+          }
+          if(data.type =="4" || data.type =="5")
+          {
+            message="Bạn sắp hết gạo";
+          }
+          if(data.type =="2")
+          {
+            message="Đơn hàng của bạn đã bị hủy";
+          }
+          var alertPopup = $ionicPopup.alert({
               title: 'Thông báo',
-              template: data.body
-            });
-            alertPopup.then(function(res) {
-               if(data.type =="1")
-                  $state.go('orderDetail',{id: data.id});
-                else if(data.type =="2")  // reminder nor
-                  $state.go('reminder');
-                else
-                  $state.go('orders');
-            });
-
-          // var myPopup = $ionicPopup.show({
-          //   template: data.body,
-          //   title: 'Thông báo',
-          //   scope: $scope,
-          //   buttons: [
-          //     { text: 'Đóng' },
-
-          //     ]
-          //   });
+              template: message
+          });
+          alertPopup.then(function(res) {
+              
+          });
         }
       },
       function(msg){
