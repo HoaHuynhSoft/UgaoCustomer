@@ -4,7 +4,6 @@ var headers = {"Authorization": "Basic dXNlcjoxMjM0NTY="};
 angular.module('app.services', [])
 
 .factory("UserService", function($http,$q){ // Service cho user
-
   var self = {
     'curUser' : {},
     'getCurUser': function(){ // Hàm lấy user hiện tại
@@ -14,13 +13,6 @@ angular.module('app.services', [])
         var d = $q.defer();
         $http.get( hostURL +"users/"+login.UserName,{headers: headers})
         .success(function(data){
-            if (!data){
-                d.reject("error");
-            }
-            else{
-                self.curUser = data;
-                d.resolve(data);
-            }
           self.curUser = data;
           d.resolve(data);
         })

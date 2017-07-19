@@ -125,6 +125,7 @@ angular.module('app.controllers', [])
     $rootScope.extras = false; // For hiding the side bar and nav icon
     $scope.user = {};
     $scope.signupEmail = function () {
+      sharedUtils.showLoading();
       UserService.getUser({UserName:$scope.user.UserName}) // lấy user bằng user name
         .then(function success(data){
           console.log("dang ki " + data);
@@ -133,17 +134,20 @@ angular.module('app.controllers', [])
             UserService.addUser($scope.user)
             .then(function success(data){
               sharedUtils.showAlert("success","Tạo thành công, vui lòng đăng nhập để tiếp tục");
-               $timeout(function () {
-                  $state.go('tabLogin.login');
-              }, 2000);
+              sharedUtils.hideLoading();
+               $scope.user = {};
+              $state.go('tabLogin.login');
             }, function error(msg){
-               sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
+                sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
+                sharedUtils.hideLoading();
             });
           }
           else
           sharedUtils.showAlert("warning","Tên đăng nhập đã tồn tại.");
+          sharedUtils.hideLoading();
         }, function error(msg){
-          sharedUtils.showAlert("warning","Đã có lỗi xảy ra, kiểm tra mạng và thử lại");
+          sharedUtils.showAlert("warning","Không kết nối được đến máy chủ");
+          sharedUtils.hideLoading();
         });
 
     }
