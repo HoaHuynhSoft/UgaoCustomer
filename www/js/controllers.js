@@ -48,7 +48,7 @@ angular.module('app.controllers', [])
       console.log($rootScope.PushToken);
       sharedUtils.showLoading();
       //Get user to check
-      UserService.getUser({UserName:user.UserName}) 
+      UserService.getUser({UserName:user.UserName})
         .then(function success(data){
           //If get success
             sharedUtils.hideLoading();
@@ -58,14 +58,25 @@ angular.module('app.controllers', [])
             }
             // Then check info input
             if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase()) && (user.Pass == data.Pass)){
-                  // If correct then 
+                  // If correct then
                 $window.localStorage['username'] = user.UserName;
                 $window.localStorage['pass'] = user.Pass;
                 $rootScope.userName =data.FullName;
-                // Update device token 
+                // Update device token
                 if ($rootScope.PushToken != null){
                   data.PushToken = $rootScope.PushToken;
                   UserService.updateUser(data);
+                }
+                else{
+                  FCMPlugin.getToken(
+                    function(token){
+                      $rootScope.PushToken = token;
+                      console.log(' retrieving token: 111111 ' + token);
+                    },
+                    function(err){
+                      console.log('error retrieving token: ' + err);
+                    }
+                  );
                 }
                 // Get user's cart
                 CartService.getCartByUserId( UserService.getCurUser()._id)

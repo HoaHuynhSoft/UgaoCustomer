@@ -46,7 +46,20 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
           else
             $state.go('orders');
         }else{
-           $state.go('reminder');
+           //$state.go('reminder');
+            var alertPopup = $ionicPopup.alert({
+              title: 'Thông báo',
+              template: data.body
+            });
+            alertPopup.then(function(res) {
+               if(data.type =="1")
+                  $state.go('orderDetail',{id: data.id});
+                else if(data.type =="2")  // reminder nor
+                  $state.go('reminder');
+                else
+                  $state.go('orders');
+            });
+
           // var myPopup = $ionicPopup.show({
           //   template: data.body,
           //   title: 'Thông báo',
