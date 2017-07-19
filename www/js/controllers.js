@@ -68,15 +68,19 @@ angular.module('app.controllers', [])
                   UserService.updateUser(data);
                 }
                 else{
-                  FCMPlugin.getToken(
+                  if (ionic.Platform.isAndroid())
+                  {
+                    FCMPlugin.getToken(
                     function(token){
                       $rootScope.PushToken = token;
-                      console.log(' retrieving token: 111111 ' + token);
+                      console.log(' retrieving token:' + token);
                     },
                     function(err){
                       console.log('error retrieving token: ' + err);
                     }
                   );
+                  }
+                  
                 }
                 // Get user's cart
                 CartService.getCartByUserId( UserService.getCurUser()._id)
