@@ -57,7 +57,7 @@ angular.module('app.controllers', [])
               return;
             }
             // Then check info input
-            if(data!=null && (user.UserName.toLowerCase() == data.UserName.toLowerCase()) && (user.Pass == data.Pass)){
+            if(data!=null && user.UserName == data.UserName && user.Pass == data.Pass){
                   // If correct then
                 $window.localStorage['username'] = user.UserName;
                 $window.localStorage['pass'] = user.Pass;
@@ -490,15 +490,13 @@ angular.module('app.controllers', [])
       sharedUtils.showAlert("warning","Số bao không hợp lệ");
       detail.numOfKilogramType=1;
     }
-    else{
-      var temp =0;
+    var temp =0;
       $scope.curCart.OrderDetails.forEach(function(detail,index){
         temp += detail.Item.price*detail.kilogramType*detail.numOfKilogramType;
       });
       $scope.curCart.Total = temp;
       CartService.setCurCart($scope.curCart);
       $scope.updateCart();
-    }
   };
 
   $scope.order=function(){
